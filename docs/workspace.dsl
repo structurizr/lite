@@ -1,4 +1,4 @@
-workspace {
+workspace "Structurizr Lite" "Structurizr Lite documentation" {
 
     model {
         lite = softwareSystem "Structurizr Lite" {
