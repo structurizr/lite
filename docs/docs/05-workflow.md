@@ -21,7 +21,7 @@ To publish your local workspace to the Structurizr cloud service or an on-premis
 
 - For workspaces where all diagrams are configured to use auto-layout, just push the `workspace.dsl` file using the [Structurizr CLI](https://github.com/structurizr/cli).
 - For workspaces where one or more diagrams are configured to use manual layout, push the `workspace.json` file using the [Structurizr CLI](https://github.com/structurizr/cli) with `-merge false` to force your local diagram layout to be used.
-- Alternatively you can configure [auto-sync](04-auto-sync.md#auto-sync).
+- Alternatively you can configure [auto-sync](04-auto-sync.md).
 
 ### Code-based client library
 
