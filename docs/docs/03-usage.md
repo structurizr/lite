@@ -4,7 +4,8 @@ Navigating to [http://localhost:8080](http://localhost:8080) should open Structu
 where you'll be able to view any diagrams, documentation, and decision records defined in your workspace.
 Any changes made to the `workspace.dsl` or `workspace.json` files will be reflected when you refresh your web browser.
 
-### Workspace extension and offsets
+### Workspace path
+
 Setting an environment variable named `STRUCTURIZR_WORKSPACE_PATH` provides a way to tell Structurizr Lite that your
 workspace definition can be found in a subdirectory of the Structurizr data directory.
 This can be useful in conjunction with the workspace extension feature; for example:
@@ -26,3 +27,14 @@ export STRUCTURIZR_WORKSPACE_PATH=software-system-1
 java -jar structurizr-lite.war /Users/simon/structurizr
 ```
 
+### Workspace filename
+
+By default, Structurizr Lite will look for files named `workspace.dsl` and `workspace.json` in your Structurizr data directory.
+You can customise this behaviour via an environment variable named `STRUCTURIZR_WORKSPACE_FILENAME`.
+For example, the following command will look for files named `system-landscape.dsl` and `system-landscape.json` instead:
+
+```
+docker run -it --rm -p 8080:8080 -v /Users/simon/structurizr:/usr/local/structurizr -e STRUCTURIZR_WORKSPACE_FILENAME=system-landscape structurizr/lite
+```
+
+Please note that you do not need to include the `.dsl` or `.json` file extension.
