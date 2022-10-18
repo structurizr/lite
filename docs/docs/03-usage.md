@@ -38,3 +38,24 @@ docker run -it --rm -p 8080:8080 -v /Users/simon/structurizr:/usr/local/structur
 ```
 
 Please note that you do not need to include the `.dsl` or `.json` file extension.
+
+### Auto-save
+
+By default, auto-save is enabled, with a 5000ms interval. To change this, create a file named `structurizr.properties`
+in your Structurizr Lite data directory and add the following line, changing the number of milliseconds as required. A value of `0` will disable auto-save.
+
+```
+structurizr.autoSaveInterval=5000
+```
+
+### Auto-refresh
+
+By default, auto-refresh is disabled, and changes to your workspace will not be seen in your web browser until you refresh the diagrams/documentation/decision pages.
+To enable auto-refresh, create a file named `structurizr.properties`
+in your Structurizr Lite data directory and add the following line, changing the number of milliseconds as required. A value of `0` will disable auto-refresh.
+
+```
+structurizr.autoRefreshInterval=2000
+```
+
+When enabled, Structurizr Lite will look for changes to files inside your Structurizr data directory, and the diagrams/documentation/decision pages will automatically refresh when changes are detected.
