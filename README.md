@@ -9,4 +9,4 @@ Structurizr Lite will look for a `workspace.dsl` and `workspace.json` file in a 
 If you change this file (e.g. via your text editor or one of the Structurizr client libraries), you can refresh your web browser to immediately see the changes.
 
 - [Documentation](https://structurizr.com/share/76352/documentation/*)
-- [Issue tracker](issues)
+- [Issue tracker](https://github.com/structurizr/lite/issues)
