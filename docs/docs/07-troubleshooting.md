@@ -7,3 +7,8 @@ If you can see Structurizr Lite in your web browser, but it doesn't look right (
 1. Create a file named `structurizr.properties` in your Structurizr data directory, next to your `workspace.dsl` file.
 2. Add a line as follows: `structurizr.url=XXX` (where `XXX` represents the top-level URL of your Structurizr Lite installation; e.g. `https://structurizr.example.com`).
 3. Restart Structurizr Lite.
+
+#### Cannot run program "dot"
+
+If you see a message in the console/logs saying `Cannot run program "dot"`, it means that Graphviz is not installed.
+You will either need to install Graphviz, or switch all views in your workspace to not use automatic layout.
