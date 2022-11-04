@@ -44,18 +44,6 @@ For example, if your Structurizr data directory is located at `/Users/simon/stru
 java -jar structurizr-lite.war /Users/simon/structurizr
 ```
 
-Here's a starting point if you would like to build your own Docker image:
+#### Building your own Docker image
 
-```
-FROM eclipse-temurin:17.0.4_8-jre
-
-RUN set -eux; \
-apt-get update; \
-apt-get install -y --no-install-recommends graphviz
-
-ADD build/libs/structurizr-lite.war /usr/local/structurizr-lite.war
-
-EXPOSE 8080
-
-CMD ["java", "-jar", "/usr/local/structurizr-lite.war"]
-```
+There is a [Dockerfile](https://github.com/structurizr/lite/blob/main/Dockerfile) in the GitHub repo that can be used as a starting point if you'd like to build your own Docker image.
