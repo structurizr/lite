@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17.0.4.1_1-jre-jammy
+FROM eclipse-temurin:17.0.5_8-jre-jammy
 
 RUN set -eux; \
 	apt-get update; \
