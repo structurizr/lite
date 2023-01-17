@@ -14,22 +14,33 @@ public class DecisionsController extends AbstractController {
 
     @RequestMapping(value = "/workspace/decisions", method = RequestMethod.GET)
     public String showDecisionsForWorkspace(ModelMap model) {
-        WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData();
-        workspaceMetaData.setEditable(false);
-        workspaceMetaData.setApiKey(Configuration.getInstance().getApiKey());
-        workspaceMetaData.setApiSecret(Configuration.getInstance().getApiSecret());
+        model.addAttribute("scope", "*");
 
-        addCommonAttributes(model, "Structurizr Lite", true);
-        model.addAttribute("showFooter", false);
-        model.addAttribute("workspace", workspaceMetaData);
-        model.addAttribute("urlPrefix", "/workspace");
-
-        return "decision-log-redirect";
-
+        return showDecisions(model);
     }
 
     @RequestMapping(value = "/workspace/decisions/{softwareSystem}", method = RequestMethod.GET)
-    public String showDecisionsForSoftwareSystem(@PathVariable(value="softwareSystem") String softwareSystem, ModelMap model) {
+    public String showDecisionsForSoftwareSystem(
+            @PathVariable(value="softwareSystem") String softwareSystem,
+            ModelMap model
+    ) {
+        model.addAttribute("scope", HtmlUtils.filterHtml(softwareSystem));
+
+        return showDecisions(model);
+    }
+
+    @RequestMapping(value = "/workspace/decisions/{softwareSystem}/{container}", method = RequestMethod.GET)
+    public String showDecisionsForContainer(
+            @PathVariable(value="softwareSystem") String softwareSystem,
+            @PathVariable(value="container") String container,
+            ModelMap model
+    ) {
+        model.addAttribute("scope", HtmlUtils.filterHtml(softwareSystem) + "/" + HtmlUtils.filterHtml(container));
+
+        return showDecisions(model);
+    }
+
+    public String showDecisions(ModelMap model) {
         WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData();
         workspaceMetaData.setEditable(false);
         workspaceMetaData.setApiKey(Configuration.getInstance().getApiKey());
@@ -39,7 +50,6 @@ public class DecisionsController extends AbstractController {
         model.addAttribute("showFooter", false);
         model.addAttribute("workspace", workspaceMetaData);
         model.addAttribute("urlPrefix", "/workspace");
-        model.addAttribute("scope", HtmlUtils.filterHtml(softwareSystem));
         model.addAttribute("autoRefreshInterval", Configuration.getInstance().getAutoRefreshInterval());
         model.addAttribute("autoRefreshLastModifiedDate", workspaceComponent.getLastModifiedDate());
 
