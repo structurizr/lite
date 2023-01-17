@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-
 @Controller
 public class DocumentationController extends AbstractController {
 
@@ -22,14 +20,21 @@ public class DocumentationController extends AbstractController {
     }
 
     @RequestMapping(value = "/workspace/documentation/{softwareSystem}", method = RequestMethod.GET)
-    public String showDocumentationForSoftwareSystem(@PathVariable(value="softwareSystem") String softwareSystem, HttpServletRequest request, ModelMap model) {
+    public String showDocumentationForSoftwareSystem(
+            @PathVariable(value="softwareSystem") String softwareSystem,
+            ModelMap model
+    ) {
         model.addAttribute("scope", HtmlUtils.filterHtml(softwareSystem));
 
         return showDocumentation(model);
     }
 
     @RequestMapping(value = "/workspace/documentation/{softwareSystem}/{container}", method = RequestMethod.GET)
-    public String showDocumentationForContainer(@PathVariable(value="softwareSystem") String softwareSystem, @PathVariable(value="container") String container, HttpServletRequest request, ModelMap model) {
+    public String showDocumentationForContainer(
+            @PathVariable(value="softwareSystem") String softwareSystem,
+            @PathVariable(value="container") String container,
+            ModelMap model
+    ) {
         model.addAttribute("scope", HtmlUtils.filterHtml(softwareSystem) + "/" + HtmlUtils.filterHtml(container));
 
         return showDocumentation(model);
