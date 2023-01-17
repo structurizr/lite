@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<html lang="en">
+<head>
+    <title>${pageTitle}</title>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="keywords" content="software architecture, software architecture diagrams, c4 model" />
+
+    <link rel="icon" href="/static/img/favicon.png" />
+    <link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png" />
+
+    <link href="${structurizrConfiguration.cdnUrl}/css/bootstrap-3.3.2.min.css" rel="stylesheet" media="screen" />
+    <link href="${structurizrConfiguration.cdnUrl}/css/bootstrap-theme-3.3.2.min.css" rel="stylesheet" media="screen" />
+    <link href="${structurizrConfiguration.cdnUrl}/css/structurizr.css" rel="stylesheet" media="screen" />
+    <c:if test="${embed eq true}">
+    <link href="${structurizrConfiguration.cdnUrl}/css/structurizr-embed.css" rel="stylesheet" media="screen" />
+    </c:if>
+    <link href="${structurizrConfiguration.cdnUrl}/css/structurizr-print.css" rel="stylesheet" media="print" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" />
+    <c:choose>
+    <c:when test="${not empty cookie['structurizr.dark'] && cookie['structurizr.dark'].value eq 'false'}">
+    </c:when>
+    <c:otherwise>
+    <link href="${structurizrConfiguration.cdnUrl}/css/structurizr-dark.css" rel="stylesheet" media="screen" />
+    </c:otherwise>
+    </c:choose>
+
+    <script src="${structurizrConfiguration.cdnUrl}/js/jquery-3.1.0.js"></script>
+    <script src="${structurizrConfiguration.cdnUrl}/js/bootstrap-3.3.2.min.js"></script>
+    <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr${structurizrConfiguration.versionSuffix}.js"></script>
+    <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr-util${structurizrConfiguration.versionSuffix}.js"></script>
+</head>
+
+<body>
+
+    <c:choose>
+    <c:when test="${showHeader eq true}">
+    <div id="topNavigation">
+        <div class="row">
+            <div class="col-sm-2 hidden-xs hidden-sm" style="padding: 18px 20px 10px 20px">
+                <a id="brandingLogoAnchor" href="/"><img src="/static/img/structurizr-banner.png" alt="Structurizr" class="structurizrBannerLight img-responsive brandingLogo" /><img src="/static/img/structurizr-banner-dark.png" alt="Structurizr" class="structurizrBannerDark img-responsive brandingLogo" /></a>
+            </div>
+            <div class="col-sm-10 centered" style="padding: 20px 20px 10px 20px; text-align: right;">
+                <span class="topNavigationItem">
+                    <form id="searchForm" method="get" action="/search" style="display: inline-block">
+                        <div class="form-inline" style="margin-top: 8px">
+                            <div class="form-group">
+                                <input type="text" name="query" class="form-control" placeholder="Search" value="${query}" style="width: 300px" />
+                            </div>
+                        </div>
+                    </form>
+                </span>
+                <span class="topNavigationItem"><a href="/workspace/diagrams">Diagrams</a></span>
+                <span class="topNavigationItem"><a href="/workspace/documentation">Documentation</a></span>
+                <span class="topNavigationItem"><a href="/workspace/decisions">Decisions</a></span>
+                <span class="topNavigationItem"><a href="https://structurizr.com/help" target="_blank">Help</a></span>
+            </div>
+        </div>
+    </div>
+
+    </c:when>
+    <c:otherwise>
+        <style>
+            body {
+                padding-top: 0;
+            }
+        </style>
+    </c:otherwise>
+    </c:choose>
+
+    <div id="content">

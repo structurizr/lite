@@ -59,3 +59,12 @@ structurizr.autoRefreshInterval=2000
 ```
 
 When enabled, Structurizr Lite will look for changes to files inside your Structurizr data directory, and the diagrams/documentation/decision pages will automatically refresh when changes are detected.
+
+### Read-only diagrams
+
+By default, diagrams are editable. To disable this behaviour and make the diagrams read-only, create a file named `structurizr.properties`
+in your Structurizr Lite data directory and add the following line.
+
+```
+structurizr.editable=false
+```

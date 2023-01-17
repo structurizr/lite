@@ -1,0 +1,44 @@
+plugins {
+	id 'org.springframework.boot' version '2.7.7'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+	id 'war'
+}
+
+group = 'com.structurizr'
+
+sourceCompatibility = '17'
+targetCompatibility = '17'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web:2.7.7'
+	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:9.0.70'
+	implementation 'javax.servlet:jstl'
+
+	implementation 'com.structurizr:structurizr-dsl:1.23.0'
+	implementation 'com.structurizr:structurizr-documentation:1.1.0'
+	implementation 'com.structurizr:structurizr-graphviz:1.6.1'
+
+	implementation 'org.codehaus.groovy:groovy-jsr223:3.0.13'
+	implementation 'org.jetbrains.kotlin:kotlin-scripting-jsr223:1.7.22'
+	implementation 'org.jruby:jruby-core:9.4.0.0'
+
+	implementation 'org.apache.lucene:lucene-core:8.11.1'
+	implementation 'org.apache.lucene:lucene-queryparser:8.11.1'
+
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+}
+
+test {
+	useJUnitPlatform()
+}
+
+bootWar {
+	requiresUnpack '**/kotlin-*.jar'
+}
