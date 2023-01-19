@@ -8,6 +8,7 @@ Structurizr Lite can be used standalone for workspace viewing/authoring, or in c
 Structurizr Lite will look for a `workspace.dsl` and `workspace.json` file in a given directory, in that order, and use the file it finds first.
 If you change this file (e.g. via your text editor or one of the Structurizr client libraries), you can refresh your web browser to immediately see the changes.
 
+- [Getting started](https://structurizr.com/share/76352/documentation#getting-started)
 - [Documentation](https://structurizr.com/share/76352/documentation) ([source](docs))
 - [Issue tracker](https://github.com/structurizr/lite/issues)
 

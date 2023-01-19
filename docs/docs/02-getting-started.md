@@ -1,49 +1,44 @@
 ## Getting started
 
-Structurizr Lite is available as [Docker image](#docker) (recommended) and [a Spring Boot application](#spring-boot).
+Here's a quick getting started to using Structurizr Lite via the pre-built Docker image,
+and assumes that you have Docker installed.
 
-### Create the Structurizr data directory
+### Create a directory
 
-Structurizr Lite needs to be given access to a directory, in which a `workspace.dsl` or `workspace.json` file exists that defines your workspace.
+First you need to create a directory somewhere to store your workspace.
 We'll refer to this directory as the "Structurizr data directory".
-If this directory doesn't exist when Structurizr Lite is started up, it will be created for you, along with a basic DSL file.
 
-### Docker
+### Start Structurizr Lite
 
-Assuming that you have Docker installed, to start Structurizr Lite, use the following command to pull the image from [Docker Hub](https://hub.docker.com/r/structurizr/lite).
+You can now start Structurizr Lite with the following commands, replacing `PATH` with the path to your Structurizr data directory:
 
 ```
 docker pull structurizr/lite
-```
-
-Then use the following command to start the Docker container, replacing `PATH` with the path to your Structurizr data directory:
-
-```
 docker run -it --rm -p 8080:8080 -v PATH:/usr/local/structurizr structurizr/lite
 ```
 
 For example, if your Structurizr data directory is located at `/Users/simon/structurizr`, the command would be:
 
 ```
+docker pull structurizr/lite
 docker run -it --rm -p 8080:8080 -v /Users/simon/structurizr:/usr/local/structurizr structurizr/lite
 ```
 
-### Spring Boot
+### Open your web browser
 
-To use the Spring Boot version, you'll need Java 11+ (required) and [Graphviz](https://graphviz.org/download/) (optional; if you want to use automatic layout).
-Download the Spring Boot .war file from [https://static.structurizr.com/download/structurizr-lite.war](https://static.structurizr.com/download/structurizr-lite.war), and start with the following command, replacing `PATH` with the path to your Structurizr data directory:
+With Structurizr Lite running, you can head to [http://localhost:8080](http://localhost:8080) in your web browser, where
+you should see the diagram editor:
 
-```
-java -jar structurizr-lite.war PATH
-```
+![Getting started with Structurizr Lite](images/getting-started.png)
 
+At startup, Structurizr Lite created a file named `workspace.dsl` in your Structurizr data directory as a starting point.
+This is a Structurizr workspace, defined using the [Structurizr DSL](https://github.com/structurizr/dsl).
+It defines a model consisting of a user using a software system, and a single C4 model system context view.
 
-For example, if your Structurizr data directory is located at `/Users/simon/structurizr`, the command would be:
+### Make some changes
 
-```
-java -jar structurizr-lite.war /Users/simon/structurizr
-```
+You can now modify the `workspace.dsl` file, save the changes, and refresh your web browser to see those changes.
+Some useful links related to the DSL are:
 
-#### Building your own Docker image
-
-There is a [Dockerfile](https://github.com/structurizr/lite/blob/main/Dockerfile) in the GitHub repo that can be used as a starting point if you'd like to build your own Docker image.
+- [Structurizr DSL language reference](https://github.com/structurizr/dsl/blob/master/docs/language-reference.md)
+- [Structurizr DSL cookbook](https://github.com/structurizr/dsl/tree/master/docs/cookbook)
