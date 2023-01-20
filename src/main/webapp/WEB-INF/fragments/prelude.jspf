@@ -31,7 +31,7 @@
     </c:otherwise>
     </c:choose>
 
-    <script src="${structurizrConfiguration.cdnUrl}/js/jquery-3.1.0.js"></script>
+    <script src="${structurizrConfiguration.cdnUrl}/js/jquery-3.6.3.min.js"></script>
     <script src="${structurizrConfiguration.cdnUrl}/js/bootstrap-3.3.2.min.js"></script>
     <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr${structurizrConfiguration.versionSuffix}.js"></script>
     <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr-util${structurizrConfiguration.versionSuffix}.js"></script>
