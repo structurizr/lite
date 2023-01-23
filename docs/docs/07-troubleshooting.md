@@ -30,7 +30,7 @@ In essence, the merging algorithm isn't able to match elements created via the `
 in the `workspace.json` file.
 
 Entire diagrams losing their layout information is generally caused by changing the key associated with that view.
-To minimise this, please be sure to use stable keys for your views, rather than allowing the DSL to generate them for you.
+To minimise this, please be sure to use stable keys for your views, rather than allowing the DSL parser to generate them for you.
 For example:
 
 ```
