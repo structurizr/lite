@@ -2,6 +2,7 @@ package com.structurizr.lite.web;
 
 import com.structurizr.lite.Configuration;
 import com.structurizr.lite.component.workspace.WorkspaceComponent;
+import com.structurizr.lite.util.RandomGuidGenerator;
 import com.structurizr.lite.util.Version;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
@@ -9,6 +10,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.TimeZone;
 
 public abstract class AbstractController {
@@ -33,8 +37,11 @@ public abstract class AbstractController {
     }
 
     @ModelAttribute
-    protected void addSecurityHeaders(HttpServletResponse response) {
+    protected void addSecurityHeaders(HttpServletResponse response, ModelMap model) {
         response.addHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+
+        String nonce = Base64.getEncoder().encodeToString(new RandomGuidGenerator().generate().getBytes(StandardCharsets.UTF_8));
+        model.addAttribute("scriptNonce", nonce);
     }
 
     @ModelAttribute
