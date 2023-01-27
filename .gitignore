@@ -8,6 +8,8 @@ src/main/resources/static/*
 
 src/main/webapp/WEB-INF/fragments/progress-message.jspf
 src/main/webapp/WEB-INF/fragments/quick-navigation.jspf
+src/main/webapp/WEB-INF/fragments/tooltip.jspf
+src/main/webapp/WEB-INF/fragments/diagrams/*
 src/main/webapp/WEB-INF/fragments/workspace/*
 
 src/main/webapp/WEB-INF/jsp/404.jsp

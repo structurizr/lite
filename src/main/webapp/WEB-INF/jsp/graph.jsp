@@ -4,7 +4,6 @@
 
 <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/d3-7.8.2.min.js"></script>
 <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr-d3${structurizrConfiguration.versionSuffix}.js"></script>
-<script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr-fullscreen${structurizrConfiguration.versionSuffix}.js"></script>
 <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr-ui${structurizrConfiguration.versionSuffix}.js"></script>
 
 <div id="graphContent" >
@@ -14,8 +13,8 @@
     <%@ include file="/WEB-INF/fragments/tooltip.jspf" %>
 
     <div id="embeddedControls" style="text-align: right; position: absolute; bottom: 10px; right: 10px; opacity: 0.1; z-index: 100;">
-        <button class="btn btn-default" id="enterFullScreenButton" title="Enter Full Screen [f]" onclick="Structurizr.enterFullScreen('graphContent')"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/fullscreen.svg" class="icon-btn" /></button>
-        <button class="btn btn-default hidden" id="exitFullScreenButton" title="Exit Full Screen [Escape]" onclick="Structurizr.exitFullScreen()"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/fullscreen-exit.svg" class="icon-btn" /></button>
+        <button class="btn btn-default" id="enterFullScreenButton" title="Enter Full Screen [f]" onclick="structurizr.ui.enterFullScreen('graphContent')"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/fullscreen.svg" class="icon-btn" /></button>
+        <button class="btn btn-default hidden" id="exitFullScreenButton" title="Exit Full Screen [Escape]" onclick="structurizr.ui.exitFullScreen()"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/fullscreen-exit.svg" class="icon-btn" /></button>
         <c:if test="${embed eq true}">
             <button class="btn btn-default" title="Open graph in new window" onclick="openGraphInNewWindow()"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/link.svg" class="icon-btn" /></button>
         </c:if>
@@ -27,6 +26,7 @@
     var margin = 0;
     var width;
     var height;
+    const darkMode = false;
 
     var graph;
     var simulation;
@@ -81,10 +81,41 @@
         progressMessage.hide();
     }
 
-    function applyThemeFrom(themeUrl) {
-        $.get(themeUrl, undefined, function(data) {
+    function applyThemeFrom(url) {
+        $.get(url, undefined, function(data) {
             try {
-                //Structurizr.workspace.addTheme(JSON.parse(data)); // todo
+                const theme = JSON.parse(data);
+                if (theme !== undefined) {
+                    const baseUrl = url.substring(0, url.lastIndexOf('/') + 1);
+
+                    if (theme.elements === undefined) {
+                        theme.elements = [];
+                    }
+                    if (theme.relationships === undefined) {
+                        theme.relationships = [];
+                    }
+
+                    for (var i = 0; i < theme.elements.length; i++) {
+                        const style = elements[i];
+                        if (style.icon) {
+                            if (style.icon.indexOf('http') > -1) {
+                                // okay, image served over HTTP
+                            } else if (style.icon.indexOf('data:image') > -1) {
+                                // also okay, data URI
+                            } else {
+                                // convert the relative icon filename into a full URL
+                                style.icon = baseUrl + style.icon;
+                            }
+                        }
+                    }
+                }
+
+                themes.push(
+                    {
+                        elements: theme.elements,
+                        relationships: theme.relationships
+                    }
+                );
                 numberOfThemesToBeLoaded--;
             } catch (e) {
                 console.log('Could not load theme from ' + themeUrl);
@@ -128,7 +159,7 @@
                     });
                 }
 
-                $('#graphTitle').text(Structurizr.workspace.getTitleForView(view));
+                $('#graphTitle').text(structurizr.ui.getTitleForView(view));
             }
         }
 
@@ -137,7 +168,7 @@
         });
 
         elements.forEach(function(element) {
-            var elementStyle = Structurizr.workspace.findElementStyle(element);
+            const elementStyle = structurizr.ui.findElementStyle(element, darkMode);
             graph.nodes.push({
                 id: element.id,
                 name: element.name,
@@ -167,7 +198,7 @@
                             target: relationship.destinationId,
                             type: 'Relationship',
                             description: relationship.description,
-                            style: Structurizr.workspace.findRelationshipStyle(relationship),
+                            style: structurizr.ui.findRelationshipStyle(relationship),
                             relationship: relationship
                         });
                     }
@@ -432,7 +463,7 @@
         var navHeight = 0;
 
         <c:if test="${empty iframe}">
-        if (Structurizr.isFullScreen()) {
+        if (structurizr.ui.isFullScreen()) {
             navHeight = 0;
         } else {
             navHeight = $('#topNavigation').outerHeight();
@@ -550,6 +581,16 @@
     function openGraphInNewWindow() {
         window.open('${urlPrefix}/explore/graph?view=' + encodeURIComponent(viewKey));
     }
+
+    $(document).bind('webkitfullscreenchange mozfullscreenchange fullscreenchange fullscreenChange MSFullscreenChange',function(){
+        if (structurizr.ui.isFullScreen()) {
+            $('#enterFullScreenButton').addClass("hidden");
+            $('#exitFullScreenButton').removeClass("hidden");
+        } else {
+            $('#enterFullScreenButton').removeClass("hidden");
+            $('#exitFullScreenButton').addClass("hidden");
+        }
+    });
 </script>
 
 <c:choose>
