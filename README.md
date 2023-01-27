@@ -12,8 +12,32 @@ If you change this file (e.g. via your text editor or one of the Structurizr cli
 - [Documentation](https://structurizr.com/share/76352/documentation) ([source](docs))
 - [Issue tracker](https://github.com/structurizr/lite/issues)
 
-## Important note
+## Building from source
 
 Open sourcing Structurizr Lite is a work in progress, and should be completed later in 2023.
-Most of the UI code (HTML, CSS, JS, JSP, etc) is shared with the Structurizr cloud service and on-premises installation, so isn't yet available in this repo.
+Much of the UI code (HTML, CSS, JS, JSP, etc) is shared with the Structurizr cloud service and on-premises installation,
+and hasn't been fully open sourced yet.
 This means you will not be able to build a fully working version of Structurizr Lite from this repo.
+
+❌ Diagrams
+✅ Graph view
+✅ Documentation
+✅ Decisions
+
+To build from source (this has only been tested with Java 17):
+
+```
+git clone https://github.com/structurizr/lite.git structurizr-lite
+git clone https://github.com/structurizr/ui.git structurizr-ui
+cd structurizr-lite
+./ui.sh
+./gradlew build
+```
+
+And to run Structurizr Lite (this has only been tested with Java 17):
+
+```
+java -jar build/libs/structurizr-lite.war /path/to/workspace
+```
+
+(replace `/path/to/workspace` with the path to the folder where your `workspace.dsl` file is)
