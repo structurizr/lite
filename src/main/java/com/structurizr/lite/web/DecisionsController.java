@@ -53,7 +53,7 @@ public class DecisionsController extends AbstractController {
         model.addAttribute("autoRefreshInterval", Configuration.getInstance().getAutoRefreshInterval());
         model.addAttribute("autoRefreshLastModifiedDate", workspaceComponent.getLastModifiedDate());
 
-        return "decision-log";
+        return "decisions";
     }
 
 }
