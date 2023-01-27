@@ -32,15 +32,11 @@ public class GraphController extends AbstractController {
 
         model.addAttribute("type", "graph");
         model.addAttribute("view", view);
-        model.addAttribute("includePeople", true);
-        model.addAttribute("includeSoftwareSystems", true);
-        model.addAttribute("includeContainers", true);
-        model.addAttribute("includeComponents", true);
 
         model.addAttribute("showDiagramsNavigationLink", !workspace.getViews().isEmpty());
         model.addAttribute("showDocumentationNavigationLink", !workspace.getDocumentation().getSections().isEmpty());
         model.addAttribute("showDecisionsNavigationLink", !workspace.getDocumentation().getDecisions().isEmpty());
 
-        return "explore-graph";
+        return "graph";
     }
 }

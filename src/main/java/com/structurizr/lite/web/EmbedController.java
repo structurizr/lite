@@ -67,7 +67,7 @@ public class EmbedController extends AbstractController {
             model.addAttribute("includeContainers", true);
             model.addAttribute("includeComponents", true);
 
-            return "explore-graph";
+            return "graph";
         } else {
             if (!StringUtils.isNullOrEmpty(view)) {
                 model.addAttribute("diagramIdentifier", view);
