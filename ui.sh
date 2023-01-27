@@ -1,6 +1,9 @@
 export STRUCTURIZR_UI_DIR=../structurizr-ui
 export STRUCTURIZR_LITE_DIR=.
 
+mkdir $STRUCTURIZR_LITE_DIR/src/main/resources/static/
+mkdir $STRUCTURIZR_LITE_DIR/src/main/resources/static/static
+
 # JavaScript
 mkdir $STRUCTURIZR_LITE_DIR/src/main/resources/static/static/js
 cp $STRUCTURIZR_UI_DIR/src/js/* $STRUCTURIZR_LITE_DIR/src/main/resources/static/static/js
