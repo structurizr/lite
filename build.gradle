@@ -19,8 +19,7 @@ dependencies {
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:9.0.70'
 	implementation 'javax.servlet:jstl'
 
-	implementation 'com.structurizr:structurizr-dsl:1.23.0'
-	implementation 'com.structurizr:structurizr-documentation:1.1.0'
+	implementation 'com.structurizr:structurizr-dsl:1.24.0'
 	implementation 'com.structurizr:structurizr-graphviz:1.6.1'
 
 	implementation 'org.codehaus.groovy:groovy-jsr223:3.0.13'
