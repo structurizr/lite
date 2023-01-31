@@ -138,6 +138,20 @@ public class StructurizrLite extends SpringBootServletInitializer {
 		log.info("Auto-refresh interval: " + Configuration.getInstance().getAutoRefreshInterval() + "ms");
 
 		try {
+			ProcessBuilder processBuilder = new ProcessBuilder();
+			processBuilder.command("dot", "--version");
+			Process process = processBuilder.start();
+			int exitCode = process.waitFor();
+			if (exitCode == 0) {
+				log.info("dot: available");
+			} else {
+				log.info("dot: not available");
+			}
+		} catch (Exception e) {
+			log.info("dot: " + e.getMessage());
+		}
+
+		try {
 			long workspaceId = Configuration.getInstance().getRemoteWorkspaceId();
 			if (workspaceId > 0) {
 				StructurizrClient structurizrClient = createStructurizrClient();
