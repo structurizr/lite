@@ -141,12 +141,8 @@ public class StructurizrLite extends SpringBootServletInitializer {
 			ProcessBuilder processBuilder = new ProcessBuilder();
 			processBuilder.command("dot", "--version");
 			Process process = processBuilder.start();
-			int exitCode = process.waitFor();
-			if (exitCode == 0) {
-				log.info("dot: available");
-			} else {
-				log.info("dot: not available");
-			}
+			process.waitFor();
+			log.info("dot: available");
 		} catch (Exception e) {
 			log.info("dot: " + e.getMessage());
 		}
