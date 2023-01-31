@@ -2,6 +2,7 @@ package com.structurizr.lite;
 
 import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClient;
+import com.structurizr.documentation.importer.DefaultDocumentationImporter;
 import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.encryption.AesEncryptionStrategy;
 import com.structurizr.lite.util.DateUtils;
@@ -118,6 +119,12 @@ public class StructurizrLite extends SpringBootServletInitializer {
 
 		try {
 			log.info("structurizr-dsl: v" + Class.forName(StructurizrDslParser.class.getCanonicalName()).getPackage().getImplementationVersion());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		try {
+			log.info("structurizr-documentation: v" + Class.forName(DefaultDocumentationImporter.class.getCanonicalName()).getPackage().getImplementationVersion());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
