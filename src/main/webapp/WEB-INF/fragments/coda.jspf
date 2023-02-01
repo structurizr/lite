@@ -18,4 +18,14 @@
     </c:if>
 
     </body>
+
+    <script>
+        window.onerror = function (msg, url, lineNo, columnNo, error) {
+            logError(msg, url, lineNo, error);
+        };
+
+        function logError(msg, url, lineNo, error) {
+            console.log(msg);
+        }
+    </script>
 </html>
