@@ -14,17 +14,10 @@ If you change this file (e.g. via your text editor or one of the Structurizr cli
 
 ## Building from source
 
-Open sourcing Structurizr Lite is a work in progress, and should be completed later in 2023.
-Much of the UI code (HTML, CSS, JS, JSP, etc) is shared with the Structurizr cloud service and on-premises installation,
-and hasn't been fully open sourced yet.
-This means you will not be able to build a fully working version of Structurizr Lite from this repo.
+- Note 1: The HTML, JS, CSS, JSP, etc files are in a separate [structurizr/ui](https://github.com/structurizr/ui) repo because they are shared with the on-premises installation and cloud service.
+- Note 2: Building and running from source has only been tested with Java 17.
 
-❌ Diagrams
-✅ Graph view
-✅ Documentation
-✅ Decisions
-
-To build from source (this has only been tested with Java 17):
+To build from source:
 
 ```
 git clone https://github.com/structurizr/lite.git structurizr-lite
