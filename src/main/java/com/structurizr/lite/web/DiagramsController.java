@@ -5,6 +5,7 @@ import com.structurizr.lite.component.workspace.WorkspaceComponentException;
 import com.structurizr.lite.component.workspace.WorkspaceMetaData;
 import com.structurizr.lite.util.HtmlUtils;
 import com.structurizr.lite.util.InputStreamAndContentLength;
+import com.structurizr.view.PaperSize;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -24,7 +25,7 @@ public class DiagramsController extends AbstractController {
 
     @RequestMapping(value = "/workspace/diagrams", method = RequestMethod.GET)
     public String showDiagrams(ModelMap model,
-                @RequestParam(required = false) String perspective) {
+                               @RequestParam(required = false) String perspective) {
         WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData();
         workspaceMetaData.setEditable(Configuration.getInstance().isEditable());
         workspaceMetaData.setApiKey(Configuration.getInstance().getApiKey());
@@ -36,6 +37,9 @@ public class DiagramsController extends AbstractController {
         model.addAttribute("thumbnailUrl", "/workspace/images/");
         model.addAttribute("showToolbar", true);
         model.addAttribute("embed", false);
+        if (workspaceMetaData.isEditable()) {
+            model.addAttribute("paperSizes", PaperSize.getOrderedPaperSizes());
+        }
         model.addAttribute("publishThumbnails", true);
         model.addAttribute("quickNavigationPath", "diagrams");
         model.addAttribute("perspective", HtmlUtils.filterHtml(perspective));

@@ -37,6 +37,8 @@ public class Configuration {
     private final String apiKey = new RandomGuidGenerator().generate();
     private final String apiSecret = new RandomGuidGenerator().generate();
 
+    private boolean graphvizEnabled = false;
+
     private final static Configuration INSTANCE = new Configuration();
 
     static {
@@ -92,8 +94,12 @@ public class Configuration {
         return "lite";
     }
 
+    public void setGraphvizEnabled(boolean b) {
+        this.graphvizEnabled = b;
+    }
+
     public boolean isGraphvizEnabled() {
-        return true;
+        return graphvizEnabled;
     }
 
     public boolean isSafeMode() {

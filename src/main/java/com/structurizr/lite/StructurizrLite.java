@@ -143,6 +143,7 @@ public class StructurizrLite extends SpringBootServletInitializer {
 			Process process = processBuilder.start();
 			process.waitFor();
 			log.info("dot: available");
+			Configuration.getInstance().setGraphvizEnabled(true);
 		} catch (Exception e) {
 			log.info("dot: " + e.getMessage());
 		}
