@@ -35,6 +35,8 @@ cp $STRUCTURIZR_UI_DIR/src/html/* $STRUCTURIZR_LITE_DIR/src/main/resources/stati
 # JSP fragments
 cp $STRUCTURIZR_UI_DIR/src/fragments/* $STRUCTURIZR_LITE_DIR/src/main/webapp/WEB-INF/fragments
 cp $STRUCTURIZR_UI_DIR/src/fragments/workspace/* $STRUCTURIZR_LITE_DIR/src/main/webapp/WEB-INF/fragments/workspace
+mkdir $STRUCTURIZR_LITE_DIR/src/main/webapp/WEB-INF/fragments/diagrams
+cp $STRUCTURIZR_UI_DIR/src/fragments/diagrams/* $STRUCTURIZR_LITE_DIR/src/main/webapp/WEB-INF/fragments/diagrams
 
 # JSP
 cp $STRUCTURIZR_UI_DIR/src/jsp/* $STRUCTURIZR_LITE_DIR/src/main/webapp/WEB-INF/jsp
