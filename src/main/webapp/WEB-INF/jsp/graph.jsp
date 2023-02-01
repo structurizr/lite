@@ -22,7 +22,6 @@
 </div>
 
 <script nonce="${scriptNonce}">
-    var numberOfThemesToBeLoaded = undefined;
     var margin = 0;
     var width;
     var height;
@@ -51,84 +50,19 @@
     progressMessage.show('<p>Loading workspace...</p>');
 
     function workspaceLoaded() {
-        if (numberOfThemesToBeLoaded === undefined) {
-
-            try {
-                if (structurizr.workspace.getViews().configuration.themes.length > 0) {
-                    numberOfThemesToBeLoaded = structurizr.workspace.getViews().configuration.themes.length;
-
-                    structurizr.workspace.getViews().configuration.themes.forEach(function(theme) {
-                        applyThemeFrom(theme);
-                    });
-                } else {
-                    numberOfThemesToBeLoaded = 0;
-                }
-            } catch (e) {
-                console.log(e);
-            }
-        }
-
-        if (numberOfThemesToBeLoaded > 0) {
-            setTimeout(workspaceLoaded, 100);
-        } else {
-            setWidthAndHeight();
-            createGraph();
-            renderGraph();
-            addEventHandlers();
-        }
-
-        structurizr.ui.applyBranding(structurizr.workspace.getViews().configuration.branding);
-        progressMessage.hide();
+        structurizr.ui.loadThemes(function() {
+            init();
+        });
     }
 
-    function applyThemeFrom(url) {
-        $.get(url, undefined, function(data) {
-            try {
-                const theme = JSON.parse(data);
-                if (theme !== undefined) {
-                    const baseUrl = url.substring(0, url.lastIndexOf('/') + 1);
+    function init() {
+        setWidthAndHeight();
+        createGraph();
+        renderGraph();
+        addEventHandlers();
 
-                    if (theme.elements === undefined) {
-                        theme.elements = [];
-                    }
-                    if (theme.relationships === undefined) {
-                        theme.relationships = [];
-                    }
-
-                    for (var i = 0; i < theme.elements.length; i++) {
-                        const style = elements[i];
-                        if (style.icon) {
-                            if (style.icon.indexOf('http') > -1) {
-                                // okay, image served over HTTP
-                            } else if (style.icon.indexOf('data:image') > -1) {
-                                // also okay, data URI
-                            } else {
-                                // convert the relative icon filename into a full URL
-                                style.icon = baseUrl + style.icon;
-                            }
-                        }
-                    }
-                }
-
-                themes.push(
-                    {
-                        elements: theme.elements,
-                        relationships: theme.relationships
-                    }
-                );
-                numberOfThemesToBeLoaded--;
-            } catch (e) {
-                console.log('Could not load theme from ' + themeUrl);
-                console.log(e);
-                numberOfThemesToBeLoaded--;
-            }
-        }, 'text')
-            .fail(function(xhr, textStatus, errorThrown) {
-                const errorMessage = 'Could not load theme from ' + themeUrl + '; error ' + xhr.status + ' (' + xhr.statusText + ')';
-                console.log(errorMessage);
-                alert(errorMessage);
-                numberOfThemesToBeLoaded--;
-            });
+        structurizr.ui.applyBranding();
+        progressMessage.hide();
     }
 
     function createGraph() {
