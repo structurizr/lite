@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.TimeZone;
@@ -20,20 +19,8 @@ public abstract class AbstractController {
     protected WorkspaceComponent workspaceComponent;
 
     @ModelAttribute("structurizrConfiguration")
-    public Configuration getConfiguration(HttpServletRequest request) {
-        Configuration configuration = Configuration.getInstance();
-        if (configuration.getWebUrl() == null || configuration.getWebUrl().trim().length() == 0) {
-            String url = request.getScheme()
-                    + "://"
-                    + request.getServerName()
-                    + ":"
-                    + request.getServerPort()
-                    + request.getContextPath();
-
-            configuration.setWebUrl(url);
-        }
-
-        return configuration;
+    public Configuration getConfiguration() {
+        return Configuration.getInstance();
     }
 
     @ModelAttribute
