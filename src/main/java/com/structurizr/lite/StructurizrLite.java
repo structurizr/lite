@@ -189,7 +189,6 @@ public class StructurizrLite extends SpringBootServletInitializer {
 		log.info("LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,");
 		log.info("OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE");
 		log.info("SOFTWARE.");
-
 		log.info("***********************************************************************************");
 	}
 
