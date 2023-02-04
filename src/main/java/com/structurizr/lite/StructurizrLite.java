@@ -100,31 +100,30 @@ public class StructurizrLite extends SpringBootServletInitializer {
 		Log log = LogFactory.getLog(StructurizrLite.class);
 
 		log.info("***********************************************************************************");
-		log.info("   _____ _                   _              _          ");
-		log.info("  / ____| |                 | |            (_)         ");
-		log.info(" | (___ | |_ _ __ _   _  ___| |_ _   _ _ __ _ _____ __ ");
-		log.info("  \\___ \\| __| '__| | | |/ __| __| | | | '__| |_  / '__|");
-		log.info("  ____) | |_| |  | |_| | (__| |_| |_| | |  | |/ /| |   ");
-		log.info(" |_____/ \\__|_|   \\__,_|\\___|\\__|\\__,_|_|  |_/___|_|   ");
-		log.info("                                                       ");
+		log.info("  _____ _                   _              _          ");
+		log.info(" / ____| |                 | |            (_)         ");
+		log.info("| (___ | |_ _ __ _   _  ___| |_ _   _ _ __ _ _____ __ ");
+		log.info(" \\___ \\| __| '__| | | |/ __| __| | | | '__| |_  / '__|");
+		log.info(" ____) | |_| |  | |_| | (__| |_| |_| | |  | |/ /| |   ");
+		log.info("|_____/ \\__|_|   \\__,_|\\___|\\__|\\__,_|_|  |_/___|_|   ");
+		log.info("                                                      ");
 		log.info("Structurizr Lite");
-		log.info("Build: " + new Version().getBuildNumber());
-		log.info("Built: " + DateUtils.formatIsoDate(new Version().getBuildTimestamp()));
+		log.info(" - build: " + new Version().getBuildNumber() + " (" + DateUtils.formatIsoDate(new Version().getBuildTimestamp()));
 
 		try {
-			log.info("structurizr-java: v" + Class.forName(Workspace.class.getCanonicalName()).getPackage().getImplementationVersion());
+			log.info(" - structurizr-java: v" + Class.forName(Workspace.class.getCanonicalName()).getPackage().getImplementationVersion());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		try {
-			log.info("structurizr-dsl: v" + Class.forName(StructurizrDslParser.class.getCanonicalName()).getPackage().getImplementationVersion());
+			log.info(" - structurizr-dsl: v" + Class.forName(StructurizrDslParser.class.getCanonicalName()).getPackage().getImplementationVersion());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		try {
-			log.info("structurizr-documentation: v" + Class.forName(DefaultDocumentationImporter.class.getCanonicalName()).getPackage().getImplementationVersion());
+			log.info(" - structurizr-documentation: v" + Class.forName(DefaultDocumentationImporter.class.getCanonicalName()).getPackage().getImplementationVersion());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -133,7 +132,6 @@ public class StructurizrLite extends SpringBootServletInitializer {
 		log.info("Workspace path: " + Configuration.getInstance().getDataDirectory().getAbsolutePath());
 		log.info("Workspace filename: " + Configuration.getInstance().getWorkspaceFilename() + "[.dsl|.json]");
 		log.info("URL: " + Configuration.getInstance().getWebUrl());
-		log.info("Memory: used=" + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024)) + "MB; free=" + (Runtime.getRuntime().freeMemory() / (1024 * 1024)) + "MB; total=" + (Runtime.getRuntime().totalMemory() / (1024 * 1024)) + "MB; max=" + (Runtime.getRuntime().maxMemory() / (1024 * 1024)) + "MB");
 		log.info("Auto-save interval: " + Configuration.getInstance().getAutoSaveInterval() + "ms");
 		log.info("Auto-refresh interval: " + Configuration.getInstance().getAutoRefreshInterval() + "ms");
 
@@ -168,6 +166,29 @@ public class StructurizrLite extends SpringBootServletInitializer {
 		} catch (Exception e) {
 			log.error(e);
 		}
+
+		log.info("***********************************************************************************");
+		log.info("MIT License");
+		log.info("");
+		log.info("Copyright (c) 2023 Structurizr Limited");
+		log.info("");
+		log.info("Permission is hereby granted, free of charge, to any person obtaining a copy");
+		log.info("of this software and associated documentation files (the \"Software\"), to deal");
+		log.info("in the Software without restriction, including without limitation the rights");
+		log.info("to use, copy, modify, merge, publish, distribute, sublicense, and/or sell");
+		log.info("copies of the Software, and to permit persons to whom the Software is");
+		log.info("furnished to do so, subject to the following conditions:");
+		log.info("");
+		log.info("The above copyright notice and this permission notice shall be included in all");
+		log.info("copies or substantial portions of the Software.");
+		log.info("");
+		log.info("THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR");
+		log.info("IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,");
+		log.info("FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE");
+		log.info("AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER");
+		log.info("LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,");
+		log.info("OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE");
+		log.info("SOFTWARE.");
 
 		log.info("***********************************************************************************");
 	}
