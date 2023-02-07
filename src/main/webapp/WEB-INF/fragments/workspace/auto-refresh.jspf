@@ -12,7 +12,7 @@
             cache: false
         })
             .done(function(data, textStatus, jqXHR) {
-                if (data && data > lastModifiedDate && (structurizr.workspace === undefined || !unsavedChanges)) {
+                if (data && data > lastModifiedDate && (window.unsavedChanges === undefined || !unsavedChanges)) {
                         lastModifiedDate = data;
                         window.location.reload();
                 } else {
