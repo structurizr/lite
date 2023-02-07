@@ -13,6 +13,6 @@ public interface SearchComponent {
 
     void index(Workspace workspace);
 
-    List<SearchResult> search(String query, String type, Set<Long> workspaceIds);
+    List<SearchResult> search(String query, String type);
 
 }

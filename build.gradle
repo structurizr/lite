@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.7.7'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
+	id 'jvm-test-suite'
 	id 'war'
 }
 
@@ -12,6 +13,32 @@ targetCompatibility = '17'
 
 repositories {
 	mavenCentral()
+}
+
+testing {
+	suites {
+		test {
+			useJUnitJupiter()
+		}
+
+		integrationTest(JvmTestSuite) {
+			dependencies {
+				implementation project()
+			}
+
+			targets {
+				all {
+					testTask.configure {
+						shouldRunAfter(test)
+					}
+				}
+			}
+		}
+	}
+}
+
+tasks.named('check') {
+	dependsOn(testing.suites.integrationTest)
 }
 
 dependencies {
@@ -28,16 +55,13 @@ dependencies {
 
 	implementation 'org.apache.lucene:lucene-core:8.11.1'
 	implementation 'org.apache.lucene:lucene-queryparser:8.11.1'
-
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}
-}
-
-test {
-	useJUnitPlatform()
 }
 
 bootWar {
 	requiresUnpack '**/kotlin-*.jar'
+}
+
+configurations {
+	integrationTestImplementation.extendsFrom testImplementation
+	integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
 }

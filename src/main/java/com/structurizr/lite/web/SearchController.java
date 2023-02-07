@@ -41,17 +41,11 @@ public class SearchController extends AbstractController {
             category = category.toLowerCase();
         }
 
-        WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData();
-        Map<Long,WorkspaceMetaData> workspacesById = new HashMap<>();
-        workspacesById.put(1L, workspaceMetaData);
-
         if (!StringUtils.isNullOrEmpty(query)) {
-            List<SearchResult> searchResults = searchComponent.search(query, category, workspacesById.keySet());
+            List<SearchResult> searchResults = searchComponent.search(query, category);
             for (SearchResult searchResult : searchResults) {
-                if (workspacesById.containsKey(searchResult.getWorkspaceId())) {
-                    searchResult.setWorkspace(workspacesById.get(searchResult.getWorkspaceId()));
-                    filteredSearchResults.add(searchResult);
-                }
+                searchResult.setWorkspace(new WorkspaceMetaData());
+                filteredSearchResults.add(searchResult);
             }
         }
 

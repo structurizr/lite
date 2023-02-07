@@ -38,7 +38,7 @@ import java.util.Set;
 class ApacheLuceneSearchComponentImpl implements SearchComponent {
 
     private static final Log log = LogFactory.getLog(ApacheLuceneSearchComponentImpl.class);
-    private static final String INDEX_DIRECTORY_NAME = "index";
+    static final String INDEX_DIRECTORY_NAME = "index";
 
     private static final String DOCUMENTATION_PATH = "/documentation";
     private static final String DIAGRAMS_PATH = "/diagrams";
@@ -93,8 +93,6 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
             Directory dir = FSDirectory.open(indexDirectory.toPath());
             IndexWriter writer = new IndexWriter(dir, iwc);
 
-            delete(workspace.getId(), writer);
-
             Document doc = new Document();
             doc.add(new StoredField(URL_KEY, ""));
             doc.add(new TextField(WORKSPACE_KEY, toString(workspace.getId()), Field.Store.YES));
@@ -136,15 +134,6 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
 
             writer.close();
         } catch (Exception e) {
-            log.error(e);
-        }
-    }
-
-    private void delete(long workspaceId, IndexWriter indexWriter) {
-        try {
-            Term workspaceIdTerm = new Term(WORKSPACE_KEY, toString(workspaceId));
-            indexWriter.deleteDocuments(workspaceIdTerm);
-        } catch (IOException e) {
             log.error(e);
         }
     }
@@ -302,7 +291,7 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
         for (String line : lines) {
             if (line.startsWith(MARKDOWN_SECTION_HEADING) || line.startsWith(ASCIIDOC_SECTION_HEADING)) {
                 indexDocumentationSection(title, content.toString(), sectionNumber, workspace, element, indexWriter);
-                title = line.substring(2);
+                title = line.substring(MARKDOWN_SECTION_HEADING.length()-1).trim();
                 content = new StringBuilder();
                 sectionNumber++;
             } else {
@@ -348,9 +337,9 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
         doc.add(new TextField(TYPE_KEY, DocumentType.DECISION, Field.Store.YES));
 
         if (element == null) {
-            doc.add(new StoredField(NAME_KEY, decision.getId() + ". " + decision.getTitle()));
+            doc.add(new StoredField(NAME_KEY, workspace.getName() + " - " + decision.getId() + ". " + decision.getTitle()));
         } else {
-            doc.add(new StoredField(NAME_KEY, decision.getId() + ". " + element.getName() + " - " + decision.getTitle()));
+            doc.add(new StoredField(NAME_KEY, element.getName() + " - " + decision.getId() + ". " + decision.getTitle()));
         }
 
         doc.add(new StoredField(DESCRIPTION_KEY, decision.getStatus()));
@@ -400,26 +389,16 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
     }
 
     @Override
-    public List<SearchResult> search(String query, String type, Set<Long> workspaceIds) {
+    public List<SearchResult> search(String query, String type) {
         List<SearchResult> results = new ArrayList<>();
 
-        if (workspaceIds.isEmpty()) {
-            return results;
-        }
-
         try {
-            BooleanQuery.Builder workspaceQueryBuilder = new BooleanQuery.Builder();
-            for (Long workspaceId : workspaceIds) {
-                workspaceQueryBuilder.add(new TermQuery(new Term(WORKSPACE_KEY, toString(workspaceId))), BooleanClause.Occur.SHOULD);
-            }
-
             StandardAnalyzer analyzer = new StandardAnalyzer();
             QueryParser qp = new QueryParser(CONTENT_KEY, analyzer);
             qp.setDefaultOperator(QueryParser.Operator.AND);
 
             BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder()
-                    .add(qp.parse(query), BooleanClause.Occur.MUST)
-                    .add(workspaceQueryBuilder.build(), BooleanClause.Occur.MUST);
+                    .add(qp.parse(query), BooleanClause.Occur.MUST);
 
             if (!StringUtils.isNullOrEmpty(type)) {
                 queryBuilder.add(new TermQuery(new Term(TYPE_KEY, type)), BooleanClause.Occur.MUST);
