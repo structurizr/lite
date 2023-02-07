@@ -37,8 +37,13 @@ import java.util.Set;
 @org.springframework.stereotype.Component
 class ApacheLuceneSearchComponentImpl implements SearchComponent {
 
-    private static Log log = LogFactory.getLog(ApacheLuceneSearchComponentImpl.class);
-    
+    private static final Log log = LogFactory.getLog(ApacheLuceneSearchComponentImpl.class);
+    private static final String INDEX_DIRECTORY_NAME = "index";
+
+    private static final String DOCUMENTATION_PATH = "/documentation";
+    private static final String DIAGRAMS_PATH = "/diagrams";
+    private static final String DECISIONS_PATH = "/decisions";
+
     private static final String URL_KEY = "url";
     private static final String WORKSPACE_KEY = "workspace";
     private static final String NAME_KEY = "name";
@@ -46,10 +51,18 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
     private static final String TYPE_KEY = "type";
     private static final String CONTENT_KEY = "content";
 
-    private File indexDirectory;
+    private static final String MARKDOWN_SECTION_HEADING = "## ";
+    private static final String ASCIIDOC_SECTION_HEADING = "== ";
+    private static final String NEWLINE = "\n";
+
+    private final File indexDirectory;
 
     ApacheLuceneSearchComponentImpl() {
-        indexDirectory = new File(Configuration.getInstance().getWorkDirectory(), "index");
+        indexDirectory = new File(Configuration.getInstance().getWorkDirectory(), INDEX_DIRECTORY_NAME);
+    }
+
+    ApacheLuceneSearchComponentImpl(File workDirectory) {
+        indexDirectory = new File(workDirectory, INDEX_DIRECTORY_NAME);
     }
 
     @Override
@@ -113,9 +126,12 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
                 index(workspace, view, writer);
             }
 
-            index(workspace, null, workspace.getDocumentation(), writer);
+            indexDocumentationAndDecisions(workspace, null, workspace.getDocumentation(), writer);
             for (SoftwareSystem softwareSystem : workspace.getModel().getSoftwareSystems()) {
-                index(workspace, softwareSystem, softwareSystem.getDocumentation(), writer);
+                indexDocumentationAndDecisions(workspace, softwareSystem, softwareSystem.getDocumentation(), writer);
+                for (Container container : softwareSystem.getContainers()) {
+                    indexDocumentationAndDecisions(workspace, container, container.getDocumentation(), writer);
+                }
             }
 
             writer.close();
@@ -135,7 +151,7 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
 
     private void index(Workspace workspace, View view, IndexWriter indexWriter) throws Exception {
         Document doc = new Document();
-        doc.add(new StoredField(URL_KEY, "/diagrams#" + view.getKey()));
+        doc.add(new StoredField(URL_KEY, DIAGRAMS_PATH + "#" + view.getKey()));
         doc.add(new TextField(WORKSPACE_KEY, toString(workspace.getId()), Field.Store.YES));
         doc.add(new TextField(TYPE_KEY, DocumentType.DIAGRAM, Field.Store.YES));
         doc.add(new StoredField(NAME_KEY, view.getName()));
@@ -261,48 +277,73 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
         return content.toString();
     }
 
-    private void index(Workspace workspace, SoftwareSystem softwareSystem, Documentation documentation, IndexWriter indexWriter) throws Exception {
+    private void indexDocumentationAndDecisions(Workspace workspace, Element element, Documentation documentation, IndexWriter indexWriter) throws Exception {
         if (documentation != null) {
+            StringBuilder documentationContent = new StringBuilder();
             for (Section section : documentation.getSections()) {
-                index(workspace, softwareSystem, section, indexWriter);
+                documentationContent.append(section.getContent());
+                documentationContent.append(NEWLINE);
             }
+            indexDocumentation(workspace, element, documentationContent.toString(), indexWriter);
 
             for (Decision decision : documentation.getDecisions()) {
-                index(workspace, softwareSystem, decision, indexWriter);
+                indexDecision(workspace, element, decision, indexWriter);
             }
         }
     }
 
-    private void index(Workspace workspace, Element element, Section section, IndexWriter indexWriter) throws Exception {
-        Document doc = new Document();
+    private void indexDocumentation(Workspace workspace, Element element, String documentationContent, IndexWriter indexWriter) throws Exception {
+        // split the entire documentation content up into sections, each of which is defined by a ## or == heading.
+        String title = "";
+        StringBuilder content = new StringBuilder();
+        String[] lines = documentationContent.split(NEWLINE);
+        int sectionNumber = 0;
 
-        // some backwards compatibility for older documentation
-        if (element == null && !StringUtils.isNullOrEmpty(section.getElementId())) {
-            element = workspace.getModel().getElement(section.getElementId());
+        for (String line : lines) {
+            if (line.startsWith(MARKDOWN_SECTION_HEADING) || line.startsWith(ASCIIDOC_SECTION_HEADING)) {
+                indexDocumentationSection(title, content.toString(), sectionNumber, workspace, element, indexWriter);
+                title = line.substring(2);
+                content = new StringBuilder();
+                sectionNumber++;
+            } else {
+                content.append(line);
+                content.append(NEWLINE);
+            }
         }
 
-        doc.add(new StoredField(URL_KEY, "/documentation/" + calculateUrl(element, section)));
+        if (content.length() > 0) {
+            indexDocumentationSection(title, content.toString(), sectionNumber, workspace, element, indexWriter);
+        }
+    }
+
+    private void indexDocumentationSection(String title, String content, int sectionNumber, Workspace workspace, Element element, IndexWriter indexWriter) throws Exception {
+        Document doc = new Document();
+
+        doc.add(new StoredField(URL_KEY, DOCUMENTATION_PATH + calculateUrlForSection(element, sectionNumber)));
         doc.add(new TextField(WORKSPACE_KEY, toString(workspace.getId()), Field.Store.YES));
         doc.add(new TextField(TYPE_KEY, DocumentType.DOCUMENTATION, Field.Store.YES));
         if (element == null) {
-            doc.add(new StoredField(NAME_KEY, section.getTitle()));
+            if (!StringUtils.isNullOrEmpty(title)) {
+                doc.add(new StoredField(NAME_KEY, workspace.getName() + " - " + title));
+            } else {
+                doc.add(new StoredField(NAME_KEY, workspace.getName()));
+            }
         } else {
-            doc.add(new StoredField(NAME_KEY, element.getName() + " - " + section.getTitle()));
+            if (!StringUtils.isNullOrEmpty(title)) {
+                doc.add(new StoredField(NAME_KEY, element.getName() + " - " + title));
+            } else {
+                doc.add(new StoredField(NAME_KEY, element.getName()));
+            }
         }
         doc.add(new StoredField(DESCRIPTION_KEY, ""));
-        doc.add(new TextField(CONTENT_KEY, appendAll(section.getTitle(), section.getContent()), Field.Store.NO));
+        doc.add(new TextField(CONTENT_KEY, appendAll(title, content.toString()), Field.Store.NO));
         indexWriter.addDocument(doc);
     }
 
-    private void index(Workspace workspace, Element element, Decision decision, IndexWriter indexWriter) throws Exception {
+    private void indexDecision(Workspace workspace, Element element, Decision decision, IndexWriter indexWriter) throws Exception {
         Document doc = new Document();
 
-        // some backwards compatibility for older documentation
-        if (element == null && !StringUtils.isNullOrEmpty(decision.getElementId())) {
-            element = workspace.getModel().getElement(decision.getElementId());
-        }
-
-        doc.add(new StoredField(URL_KEY, "/decisions/" + calculateUrl(element, decision)));
+        doc.add(new StoredField(URL_KEY, DECISIONS_PATH + calculateUrlForDecision(element, decision)));
         doc.add(new TextField(WORKSPACE_KEY, toString(workspace.getId()), Field.Store.YES));
         doc.add(new TextField(TYPE_KEY, DocumentType.DECISION, Field.Store.YES));
 
@@ -317,28 +358,32 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
         indexWriter.addDocument(doc);
     }
 
-    private String calculateUrl(Element element, Decision decision) throws Exception {
-        if (element == null) {
-            return "*#" + urlEncode("" + decision.getId());
-        } else {
-            return urlEncode(element.getName()) + "#" + urlEncode(decision.getId());
+    protected String calculateUrlForSection(Element element, int sectionNumber) throws Exception {
+        String url = "";
+        if (element instanceof Container) {
+            url = "/" + urlEncode(element.getParent().getName()) + "/" + urlEncode(element.getName());
+        } else if (element instanceof SoftwareSystem) {
+            url = "/" + urlEncode(element.getName());
         }
+
+        if (sectionNumber > 0) {
+            url = url + "#" + sectionNumber;
+        }
+
+        return url;
     }
 
-    protected String urlEncode(String value) throws Exception {
-        return URLEncoder.encode(value, StandardCharsets.UTF_8.toString()).replaceAll("\\+", "%20");
-    }
-
-    protected String calculateUrl(Element element, Section section) throws Exception {
-        if (element == null) {
-            return "*#" + section.getOrder();
-        } else {
-            while (element.getParent() != null) {
-                element = element.getParent();
-            }
-
-            return urlEncode(element.getName()) + "#" + section.getOrder();
+    private String calculateUrlForDecision(Element element, Decision decision) throws Exception {
+        String url = "";
+        if (element instanceof Container) {
+            url = "/" + urlEncode(element.getParent().getName()) + "/" + urlEncode(element.getName());
+        } else if (element instanceof SoftwareSystem) {
+            url = "/" + urlEncode(element.getName());
         }
+
+        url = url + "#" + decision.getId();
+
+        return url;
     }
 
     private String appendAll(String... strings) {
@@ -369,7 +414,7 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
             }
 
             StandardAnalyzer analyzer = new StandardAnalyzer();
-            QueryParser qp = new QueryParser("content", analyzer);
+            QueryParser qp = new QueryParser(CONTENT_KEY, analyzer);
             qp.setDefaultOperator(QueryParser.Operator.AND);
 
             BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder()
@@ -409,6 +454,10 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
 
     private String toString(long workspaceId) {
         return "" + workspaceId;
+    }
+
+    protected String urlEncode(String value) throws Exception {
+        return URLEncoder.encode(value, StandardCharsets.UTF_8.toString()).replaceAll("\\+", "%20");
     }
 
 }
