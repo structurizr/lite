@@ -21,6 +21,12 @@ public class HomeController extends AbstractController {
     public String showDefaultPage(ModelMap model) {
         try {
             Workspace workspace = workspaceComponent.getWorkspace();
+            if (workspace == null) {
+                model.addAttribute("error", workspaceComponent.getError());
+
+                addCommonAttributes(model, "Structurizr Lite", true);
+                return "error";
+            }
 
             if (hasDocumentation(workspace)) {
                 return "redirect:/workspace/documentation";
@@ -29,7 +35,7 @@ public class HomeController extends AbstractController {
             } else {
                 return "redirect:/workspace/diagrams";
             }
-        } catch (NoWorkspaceFoundException e) {
+        } catch (Exception e) {
             log.error(e.getMessage());
             model.addAttribute("error", e.getMessage());
 
