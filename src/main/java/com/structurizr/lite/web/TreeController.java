@@ -7,12 +7,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class TreeController extends AbstractController {
 
     @RequestMapping(value = "/workspace/explore/tree", method = RequestMethod.GET)
-    public String showDocumentation(ModelMap model) {
+    public String showDocumentation(@RequestParam(required = false, defaultValue = "") String view, ModelMap model) {
         WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData();
         workspaceMetaData.setEditable(false);
         workspaceMetaData.setApiKey(Configuration.getInstance().getApiKey());
@@ -22,6 +23,8 @@ public class TreeController extends AbstractController {
         model.addAttribute("showFooter", false);
         model.addAttribute("workspace", workspaceMetaData);
         model.addAttribute("urlPrefix", "/workspace");
+
+        model.addAttribute("view", view);
 
         return "tree";
     }
