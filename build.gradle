@@ -50,7 +50,7 @@ dependencies {
 	implementation 'com.structurizr:structurizr-graphviz:1.6.1'
 
 	implementation 'org.codehaus.groovy:groovy-jsr223:3.0.13'
-	implementation 'org.jetbrains.kotlin:kotlin-scripting-jsr223:1.7.22'
+	implementation 'org.jetbrains.kotlin:kotlin-scripting-jsr223:1.6.21'
 	implementation 'org.jruby:jruby-core:9.4.0.0'
 
 	implementation 'org.apache.lucene:lucene-core:8.11.1'
