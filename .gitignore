@@ -10,6 +10,7 @@ src/main/webapp/WEB-INF/fragments/progress-message.jspf
 src/main/webapp/WEB-INF/fragments/quick-navigation.jspf
 src/main/webapp/WEB-INF/fragments/tooltip.jspf
 src/main/webapp/WEB-INF/fragments/diagrams/*
+!src/main/webapp/WEB-INF/fragments/diagrams/publish.jspf
 src/main/webapp/WEB-INF/fragments/decisions/*
 src/main/webapp/WEB-INF/fragments/workspace/load-via-inline.jspf
 src/main/webapp/WEB-INF/fragments/workspace/load-via-api.jspf
