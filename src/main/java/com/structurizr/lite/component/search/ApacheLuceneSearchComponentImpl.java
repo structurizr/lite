@@ -7,9 +7,7 @@ import com.structurizr.documentation.Section;
 import com.structurizr.lite.Configuration;
 import com.structurizr.model.*;
 import com.structurizr.util.StringUtils;
-import com.structurizr.view.ElementView;
-import com.structurizr.view.RelationshipView;
-import com.structurizr.view.View;
+import com.structurizr.view.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.Analyzer;
@@ -102,25 +100,25 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
             doc.add(new TextField(CONTENT_KEY, appendAll(workspace.getName(), workspace.getDescription()), Field.Store.NO));
             writer.addDocument(doc);
 
-            for (View view : workspace.getViews().getCustomViews()) {
+            for (CustomView view : workspace.getViews().getCustomViews()) {
                 index(workspace, view, writer);
             }
-            for (View view : workspace.getViews().getSystemLandscapeViews()) {
+            for (SystemLandscapeView view : workspace.getViews().getSystemLandscapeViews()) {
                 index(workspace, view, writer);
             }
-            for (View view : workspace.getViews().getSystemContextViews()) {
+            for (SystemContextView view : workspace.getViews().getSystemContextViews()) {
                 index(workspace, view, writer);
             }
-            for (View view : workspace.getViews().getContainerViews()) {
+            for (ContainerView view : workspace.getViews().getContainerViews()) {
                 index(workspace, view, writer);
             }
-            for (View view : workspace.getViews().getComponentViews()) {
+            for (ComponentView view : workspace.getViews().getComponentViews()) {
                 index(workspace, view, writer);
             }
-            for (View view : workspace.getViews().getDynamicViews()) {
+            for (DynamicView view : workspace.getViews().getDynamicViews()) {
                 index(workspace, view, writer);
             }
-            for (View view : workspace.getViews().getDeploymentViews()) {
+            for (DeploymentView view : workspace.getViews().getDeploymentViews()) {
                 index(workspace, view, writer);
             }
 
@@ -138,7 +136,7 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
         }
     }
 
-    private void index(Workspace workspace, View view, IndexWriter indexWriter) throws Exception {
+    private void index(Workspace workspace, ModelView view, IndexWriter indexWriter) throws Exception {
         Document doc = new Document();
         doc.add(new StoredField(URL_KEY, DIAGRAMS_PATH + "#" + view.getKey()));
         doc.add(new TextField(WORKSPACE_KEY, toString(workspace.getId()), Field.Store.YES));
