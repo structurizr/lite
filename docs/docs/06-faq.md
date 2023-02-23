@@ -1,5 +1,7 @@
 ## FAQ
 
+### Installation
+
 #### Does Structurizr Lite require Internet access?
 
 Internet access is not required by Structurizr Lite unless you're using [auto-sync](04-usage.md#auto-sync),
