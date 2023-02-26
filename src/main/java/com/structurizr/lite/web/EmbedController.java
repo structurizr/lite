@@ -105,14 +105,13 @@ public class EmbedController extends AbstractController {
         model.addAttribute("urlSuffix", urlSuffix);
 
         if ("graph".equals(type)) {
-            model.addAttribute("type", "graph");
             model.addAttribute("view", view);
-            model.addAttribute("includePeople", true);
-            model.addAttribute("includeSoftwareSystems", true);
-            model.addAttribute("includeContainers", true);
-            model.addAttribute("includeComponents", true);
 
             return "graph";
+        } else if ("tree".equals(type)) {
+            model.addAttribute("view", view);
+
+            return "tree";
         } else {
             if (!StringUtils.isNullOrEmpty(view)) {
                 model.addAttribute("diagramIdentifier", view);
