@@ -147,7 +147,7 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
         doc.add(new TextField(WORKSPACE_KEY, toString(workspace.getId()), Field.Store.YES));
         doc.add(new TextField(TYPE_KEY, DocumentType.DIAGRAM, Field.Store.YES));
         doc.add(new StoredField(NAME_KEY, view.getName()));
-        doc.add(new StoredField(DESCRIPTION_KEY, view.getDescription()));
+        doc.add(new StoredField(DESCRIPTION_KEY, view.getDescription() != null ? view.getDescription() : ""));
 
         StringBuilder content = new StringBuilder();
 
