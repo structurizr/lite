@@ -4,6 +4,7 @@ import com.structurizr.Workspace;
 import com.structurizr.documentation.Decision;
 import com.structurizr.documentation.Format;
 import com.structurizr.documentation.Section;
+import com.structurizr.model.Component;
 import com.structurizr.model.Container;
 import com.structurizr.model.SoftwareSystem;
 import org.junit.jupiter.api.AfterEach;
@@ -102,7 +103,7 @@ Bar
 
         Workspace workspace = new Workspace("W", "Description");
         workspace.setId(1);
-        workspace.getDocumentation().addSection(new Section("Title", Format.Markdown, content));
+        workspace.getDocumentation().addSection(new Section(Format.Markdown, content));
 
         searchComponent.index(workspace);
 
@@ -133,7 +134,7 @@ Bar
         Workspace workspace = new Workspace("W", "Description");
         workspace.setId(1);
         SoftwareSystem softwareSystem = workspace.getModel().addSoftwareSystem("A");
-        softwareSystem.getDocumentation().addSection(new Section("Title", Format.Markdown, content));
+        softwareSystem.getDocumentation().addSection(new Section(Format.Markdown, content));
 
         searchComponent.index(workspace);
 
@@ -165,7 +166,7 @@ Bar
         workspace.setId(1);
         SoftwareSystem softwareSystem = workspace.getModel().addSoftwareSystem("A");
         Container container = softwareSystem.addContainer("B");
-        container.getDocumentation().addSection(new Section("Title", Format.Markdown, content));
+        container.getDocumentation().addSection(new Section(Format.Markdown, content));
 
         searchComponent.index(workspace);
 
@@ -178,6 +179,39 @@ Bar
         assertEquals(1, results.size());
         assertEquals("B - Section 2", results.get(0).getName());
         assertEquals("/documentation/A/B#2", results.get(0).getUrl());
+    }
+
+    @Test
+    public void search_ComponentDocumentation() throws Exception {
+        String content =
+                """
+## Section 1
+
+Foo
+
+## Section 2
+
+Bar
+                """;
+
+        Workspace workspace = new Workspace("W", "Description");
+        workspace.setId(1);
+        SoftwareSystem softwareSystem = workspace.getModel().addSoftwareSystem("A");
+        Container container = softwareSystem.addContainer("B");
+        Component component = container.addComponent("C");
+        component.getDocumentation().addSection(new Section(Format.Markdown, content));
+
+        searchComponent.index(workspace);
+
+        List<SearchResult> results = searchComponent.search("foo", null);
+        assertEquals(1, results.size());
+        assertEquals("C - Section 1", results.get(0).getName());
+        assertEquals("/documentation/A/B/C#1", results.get(0).getUrl());
+
+        results = searchComponent.search("bar", null);
+        assertEquals(1, results.size());
+        assertEquals("C - Section 2", results.get(0).getName());
+        assertEquals("/documentation/A/B/C#2", results.get(0).getUrl());
     }
 
     @Test
@@ -233,6 +267,35 @@ Foo
         assertEquals(1, results.size());
         assertEquals("B - 1. Title", results.get(0).getName());
         assertEquals("/decisions/A/B#1", results.get(0).getUrl());
+    }
+
+    @Test
+    public void search_ComponentDecisions() throws Exception {
+        String content =
+                """
+## Context
+
+Foo
+                """;
+
+        Workspace workspace = new Workspace("W", "Description");
+        workspace.setId(1);
+        SoftwareSystem softwareSystem = workspace.getModel().addSoftwareSystem("A");
+        Container container = softwareSystem.addContainer("B");
+        Component component = container.addComponent("C");
+        Decision decision = new Decision("1");
+        decision.setTitle("Title");
+        decision.setStatus("Accepted");
+        decision.setFormat(Format.Markdown);
+        decision.setContent(content);
+        component.getDocumentation().addDecision(decision);
+
+        searchComponent.index(workspace);
+
+        List<SearchResult> results = searchComponent.search("foo", null);
+        assertEquals(1, results.size());
+        assertEquals("C - 1. Title", results.get(0).getName());
+        assertEquals("/decisions/A/B/C#1", results.get(0).getUrl());
     }
 
 }

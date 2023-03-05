@@ -40,6 +40,18 @@ public class DecisionsController extends AbstractController {
         return showDecisions(model);
     }
 
+    @RequestMapping(value = "/workspace/decisions/{softwareSystem}/{container}/{component}", method = RequestMethod.GET)
+    public String showDecisionsForComponent(
+            @PathVariable(value="softwareSystem") String softwareSystem,
+            @PathVariable(value="container") String container,
+            @PathVariable(value="component") String component,
+            ModelMap model
+    ) {
+        model.addAttribute("scope", HtmlUtils.filterHtml(softwareSystem) + "/" + HtmlUtils.filterHtml(container) + "/" + HtmlUtils.filterHtml(component));
+
+        return showDecisions(model);
+    }
+
     public String showDecisions(ModelMap model) {
         WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData();
         workspaceMetaData.setEditable(false);

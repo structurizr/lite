@@ -40,6 +40,18 @@ public class DocumentationController extends AbstractController {
         return showDocumentation(model);
     }
 
+    @RequestMapping(value = "/workspace/documentation/{softwareSystem}/{container}/{component}", method = RequestMethod.GET)
+    public String showDocumentationForComponent(
+            @PathVariable(value="softwareSystem") String softwareSystem,
+            @PathVariable(value="container") String container,
+            @PathVariable(value="component") String component,
+            ModelMap model
+    ) {
+        model.addAttribute("scope", HtmlUtils.filterHtml(softwareSystem) + "/" + HtmlUtils.filterHtml(container) + "/" + HtmlUtils.filterHtml(component));
+
+        return showDocumentation(model);
+    }
+
     private String showDocumentation(ModelMap model) {
         WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData();
         workspaceMetaData.setEditable(false);
