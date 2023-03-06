@@ -3,6 +3,7 @@ package com.structurizr.lite.web;
 
 import com.structurizr.Workspace;
 import com.structurizr.lite.component.workspace.NoWorkspaceFoundException;
+import com.structurizr.model.Component;
 import com.structurizr.model.Container;
 import com.structurizr.model.SoftwareSystem;
 import org.apache.commons.logging.Log;
@@ -60,6 +61,13 @@ public class HomeController extends AbstractController {
                 if (!container.getDocumentation().getSections().isEmpty()) {
                     return true;
                 }
+
+                // and component level documentation
+                for (Component component : container.getComponents()) {
+                    if (!component.getDocumentation().getSections().isEmpty()) {
+                        return true;
+                    }
+                }
             }
         }
 
@@ -81,6 +89,13 @@ public class HomeController extends AbstractController {
             for (Container container : softwareSystem.getContainers()) {
                 if (!container.getDocumentation().getDecisions().isEmpty()) {
                     return true;
+                }
+
+                // and component level decisions
+                for (Component component : container.getComponents()) {
+                    if (!component.getDocumentation().getDecisions().isEmpty()) {
+                        return true;
+                    }
                 }
             }
         }
