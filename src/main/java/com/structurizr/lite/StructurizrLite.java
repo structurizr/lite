@@ -2,20 +2,21 @@ package com.structurizr.lite;
 
 import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClient;
-import com.structurizr.importer.documentation.DefaultDocumentationImporter;
 import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.encryption.AesEncryptionStrategy;
+import com.structurizr.importer.documentation.DefaultDocumentationImporter;
 import com.structurizr.lite.util.DateUtils;
 import com.structurizr.lite.util.Version;
 import com.structurizr.util.StringUtils;
 import com.structurizr.util.WorkspaceUtils;
+import jakarta.annotation.PreDestroy;
+import jakarta.servlet.Filter;
 import org.apache.catalina.Context;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.descriptor.web.JspConfigDescriptorImpl;
 import org.apache.tomcat.util.descriptor.web.JspPropertyGroup;
 import org.apache.tomcat.util.descriptor.web.JspPropertyGroupDescriptorImpl;
-import org.apache.tomcat.util.scan.StandardJarScanFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
@@ -28,8 +29,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import javax.annotation.PreDestroy;
-import javax.servlet.Filter;
 import java.io.File;
 import java.util.Collections;
 
@@ -79,7 +78,7 @@ public class StructurizrLite extends SpringBootServletInitializer {
 				JspPropertyGroup jspPropertyGroup = new JspPropertyGroup();
 				jspPropertyGroup.addUrlPattern("*.jsp");
 				jspPropertyGroup.setPageEncoding("UTF-8");
-				jspPropertyGroup.setScriptingInvalid("false");
+				jspPropertyGroup.setScriptingInvalid("true");
 				jspPropertyGroup.addIncludePrelude("/WEB-INF/fragments/prelude.jspf");
 				jspPropertyGroup.addIncludeCoda("/WEB-INF/fragments/coda.jspf");
 				jspPropertyGroup.setTrimWhitespace("true");
@@ -87,11 +86,6 @@ public class StructurizrLite extends SpringBootServletInitializer {
 
 				JspPropertyGroupDescriptorImpl jspPropertyGroupDescriptor = new JspPropertyGroupDescriptorImpl(jspPropertyGroup);
 				context.setJspConfigDescriptor(new JspConfigDescriptorImpl(Collections.singletonList(jspPropertyGroupDescriptor), Collections.emptyList()));
-
-				StandardJarScanFilter filter = new StandardJarScanFilter();
-				filter.setTldSkip("*");
-				filter.setTldScan("jstl-1.2.jar");
-				context.getJarScanner().setJarScanFilter(filter);
 			}
 		};
 	}

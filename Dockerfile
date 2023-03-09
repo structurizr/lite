@@ -8,4 +8,4 @@ ADD build/libs/structurizr-lite.war /usr/local/structurizr-lite.war
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "/usr/local/structurizr-lite.war"]
+CMD ["java", "-Djdk.util.jar.enableMultiRelease=false", "-jar", "/usr/local/structurizr-lite.war"]

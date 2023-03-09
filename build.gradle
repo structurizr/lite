@@ -1,6 +1,6 @@
 plugins {
-	id 'org.springframework.boot' version '2.7.7'
-	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'org.springframework.boot' version '3.0.4'
+	id 'io.spring.dependency-management' version '1.1.0'
 	id 'java'
 	id 'jvm-test-suite'
 	id 'war'
@@ -42,9 +42,10 @@ tasks.named('check') {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web:2.7.7'
-	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:9.0.70'
-	implementation 'javax.servlet:jstl'
+	implementation 'org.springframework.boot:spring-boot-starter-web:3.0.4'
+	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:10.1.5'
+	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
+	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
 
 	implementation 'com.structurizr:structurizr-dsl:1.28.0'
 	implementation 'com.structurizr:structurizr-graphviz:1.7.0'
