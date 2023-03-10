@@ -44,7 +44,7 @@
     <div id="topNavigation">
         <div class="row">
             <div class="col-sm-2 hidden-xs hidden-sm" style="padding: 18px 20px 10px 20px">
-                <a id="brandingLogoAnchor" href="/"><img src="/static/img/structurizr-banner.png" alt="Structurizr" class="structurizrBannerLight img-responsive brandingLogo" /><img src="/static/img/structurizr-banner-dark.png" alt="Structurizr" class="structurizrBannerDark img-responsive brandingLogo" /></a>
+                <a id="brandingLogoAnchor" href="/"><img src="${structurizrConfiguration.cdnUrl}/img/structurizr-banner.png" alt="Structurizr" class="structurizrBannerLight img-responsive brandingLogo" /><img src="${structurizrConfiguration.cdnUrl}/img/structurizr-banner-dark.png" alt="Structurizr" class="structurizrBannerDark img-responsive brandingLogo" /></a>
             </div>
             <div class="col-sm-10 centered" style="padding: 20px 20px 10px 20px; text-align: right;">
                 <span class="topNavigationItem">
