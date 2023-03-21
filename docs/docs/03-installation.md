@@ -34,14 +34,14 @@ To use the Spring Boot version, you'll need Java 17+ (required) and [Graphviz](h
 Download the Spring Boot .war file from [https://static.structurizr.com/download/structurizr-lite.war](https://static.structurizr.com/download/structurizr-lite.war), and start with the following command, replacing `PATH` with the path to your Structurizr data directory:
 
 ```
-java -jar structurizr-lite.war PATH
+java -Djdk.util.jar.enableMultiRelease=false -jar structurizr-lite.war PATH
 ```
 
 
 For example, if your Structurizr data directory is located at `/Users/simon/structurizr`, the command would be:
 
 ```
-java -jar structurizr-lite.war /Users/simon/structurizr
+java -Djdk.util.jar.enableMultiRelease=false -jar structurizr-lite.war /Users/simon/structurizr
 ```
 
 #### Building your own Docker image
