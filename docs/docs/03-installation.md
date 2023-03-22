@@ -31,17 +31,17 @@ docker run -it --rm -p 8080:8080 -v /Users/simon/structurizr:/usr/local/structur
 ### Spring Boot
 
 To use the Spring Boot version, you'll need Java 17+ (required) and [Graphviz](https://graphviz.org/download/) (optional; if you want to use automatic layout).
-Download the Spring Boot .war file from [https://static.structurizr.com/download/structurizr-lite.war](https://static.structurizr.com/download/structurizr-lite.war), and start with the following command, replacing `PATH` with the path to your Structurizr data directory:
+Download the `structurizr-lite-xxxx.war` file from [https://structurizr.com/help/lite](https://structurizr.com/help/lite), and start with the following command, replacing `PATH` with the path to your Structurizr data directory:
 
 ```
-java -Djdk.util.jar.enableMultiRelease=false -jar structurizr-lite.war PATH
+java -Djdk.util.jar.enableMultiRelease=false -jar structurizr-lite-xxxx.war PATH
 ```
 
 
 For example, if your Structurizr data directory is located at `/Users/simon/structurizr`, the command would be:
 
 ```
-java -Djdk.util.jar.enableMultiRelease=false -jar structurizr-lite.war /Users/simon/structurizr
+java -Djdk.util.jar.enableMultiRelease=false -jar structurizr-lite-xxxx.war /Users/simon/structurizr
 ```
 
 #### Building your own Docker image
