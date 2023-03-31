@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class TreeController extends AbstractController {
 
     @RequestMapping(value = "/workspace/explore/tree", method = RequestMethod.GET)
-    public String showDocumentation(@RequestParam(required = false, defaultValue = "") String view, ModelMap model) {
+    public String showTree(@RequestParam(required = false, defaultValue = "") String view, ModelMap model) {
         WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData();
         workspaceMetaData.setEditable(false);
         workspaceMetaData.setApiKey(Configuration.getInstance().getApiKey());

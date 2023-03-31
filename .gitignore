@@ -23,6 +23,7 @@ src/main/webapp/WEB-INF/jsp/error.jsp
 src/main/webapp/WEB-INF/jsp/diagrams.jsp
 src/main/webapp/WEB-INF/jsp/decisions.jsp
 src/main/webapp/WEB-INF/jsp/documentation.jsp
+src/main/webapp/WEB-INF/jsp/explore.jsp
 src/main/webapp/WEB-INF/jsp/graph.jsp
 src/main/webapp/WEB-INF/jsp/tree.jsp
 src/main/webapp/WEB-INF/jsp/review-create.jsp

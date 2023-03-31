@@ -1,19 +1,17 @@
 package com.structurizr.lite.web;
 
-
 import com.structurizr.lite.Configuration;
 import com.structurizr.lite.component.workspace.WorkspaceMetaData;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class GraphController extends AbstractController {
+public class ExploreController extends AbstractController {
 
-    @RequestMapping(value = "/workspace/explore/graph", method = RequestMethod.GET)
-    public String showGraph(@RequestParam(required = false, defaultValue = "") String view, ModelMap model) {
+    @RequestMapping(value = "/workspace/explore", method = RequestMethod.GET)
+    public String showExplorePage(ModelMap model) {
         WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData();
         workspaceMetaData.setEditable(false);
         workspaceMetaData.setApiKey(Configuration.getInstance().getApiKey());
@@ -23,11 +21,9 @@ public class GraphController extends AbstractController {
         model.addAttribute("showFooter", false);
         model.addAttribute("workspace", workspaceMetaData);
         model.addAttribute("urlPrefix", "/workspace");
+        model.addAttribute("thumbnailUrl", "/workspace/images/");
 
-        model.addAttribute("type", "graph");
-        model.addAttribute("view", view);
-
-        return "graph";
+        return "explore";
     }
 
 }
