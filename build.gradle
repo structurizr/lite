@@ -47,8 +47,8 @@ dependencies {
 	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
 
-	implementation 'com.structurizr:structurizr-dsl:1.29.1'
-	implementation 'com.structurizr:structurizr-graphviz:1.8.1'
+	implementation 'com.structurizr:structurizr-dsl:1.30.0'
+	implementation 'com.structurizr:structurizr-graphviz:2.0.0'
 
 	implementation 'org.codehaus.groovy:groovy-jsr223:3.0.13'
 	implementation 'org.jetbrains.kotlin:kotlin-scripting-jsr223:1.6.21'
