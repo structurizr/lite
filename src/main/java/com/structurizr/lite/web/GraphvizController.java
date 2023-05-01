@@ -13,11 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
+import java.nio.file.Files;
 
 @RestController
 public class GraphvizController {
-
-    private static int COUNTER = 0;
 
     @PostMapping(value = "/graphviz", consumes = "application/json", produces = "application/json; charset=UTF-8")
     public String post(@RequestBody String json,
@@ -35,14 +34,11 @@ public class GraphvizController {
                 e.printStackTrace();
             }
 
-            File graphvizPath = new File(Configuration.getInstance().getWorkDirectory(), "graphviz");
-            graphvizPath.mkdirs();
-            graphvizPath.deleteOnExit();
+            File tmpdir = Files.createTempDirectory(Configuration.getInstance().getWorkDirectory().toPath(), "graphviz").toFile();
+            tmpdir.mkdirs();
+            tmpdir.deleteOnExit();
 
-            File path = new File(graphvizPath, "" + ++COUNTER);
-            path.mkdirs();
-
-            GraphvizAutomaticLayout graphviz = new GraphvizAutomaticLayout(path);
+            GraphvizAutomaticLayout graphviz = new GraphvizAutomaticLayout(tmpdir);
             graphviz.setRankDirection(findRankDirection(rankDirection));
             graphviz.setChangePaperSize(resizePaper);
             graphviz.setRankSeparation(rankSeparation);
@@ -92,13 +88,13 @@ public class GraphvizController {
             }
 
             try {
-                File[] files = path.listFiles();
+                File[] files = tmpdir.listFiles();
                 if (files != null) {
                     for (File file : files) {
                         file.delete();
                     }
                 }
-                path.delete();
+                tmpdir.delete();
             } catch (Exception e) {
                 // ignore
             }
