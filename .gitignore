@@ -6,6 +6,7 @@ build/*
 src/main/resources/build.properties
 src/main/resources/static/*
 
+src/main/webapp/WEB-INF/fragments/graphviz.jspf
 src/main/webapp/WEB-INF/fragments/progress-message.jspf
 src/main/webapp/WEB-INF/fragments/quick-navigation.jspf
 src/main/webapp/WEB-INF/fragments/tooltip.jspf
