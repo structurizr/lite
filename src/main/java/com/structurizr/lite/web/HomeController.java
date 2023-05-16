@@ -46,25 +46,25 @@ public class HomeController extends AbstractController {
     }
 
     private boolean hasDocumentation(Workspace workspace) {
-        if (!workspace.getDocumentation().getSections().isEmpty()) {
+        if (workspace.getDocumentation() != null && !workspace.getDocumentation().getSections().isEmpty()) {
             return true;
         }
 
         // check for software system level documentation
         for (SoftwareSystem softwareSystem : workspace.getModel().getSoftwareSystems()) {
-            if (!softwareSystem.getDocumentation().getSections().isEmpty()) {
+            if (softwareSystem.getDocumentation() != null && !softwareSystem.getDocumentation().getSections().isEmpty()) {
                 return true;
             }
 
             // and container level documentation
             for (Container container : softwareSystem.getContainers()) {
-                if (!container.getDocumentation().getSections().isEmpty()) {
+                if (container.getDocumentation() != null && !container.getDocumentation().getSections().isEmpty()) {
                     return true;
                 }
 
                 // and component level documentation
                 for (Component component : container.getComponents()) {
-                    if (!component.getDocumentation().getSections().isEmpty()) {
+                    if (component.getDocumentation() != null && !component.getDocumentation().getSections().isEmpty()) {
                         return true;
                     }
                 }
@@ -75,25 +75,25 @@ public class HomeController extends AbstractController {
     }
 
     private boolean hasDecisions(Workspace workspace) {
-        if (!workspace.getDocumentation().getDecisions().isEmpty()) {
+        if (workspace.getDocumentation() != null && !workspace.getDocumentation().getDecisions().isEmpty()) {
             return true;
         }
 
         // check for software system level decisions
         for (SoftwareSystem softwareSystem : workspace.getModel().getSoftwareSystems()) {
-            if (!softwareSystem.getDocumentation().getDecisions().isEmpty()) {
+            if (softwareSystem.getDocumentation() != null && !softwareSystem.getDocumentation().getDecisions().isEmpty()) {
                 return true;
             }
 
             // and container level decisions
             for (Container container : softwareSystem.getContainers()) {
-                if (!container.getDocumentation().getDecisions().isEmpty()) {
+                if (container.getDocumentation() != null && !container.getDocumentation().getDecisions().isEmpty()) {
                     return true;
                 }
 
                 // and component level decisions
                 for (Component component : container.getComponents()) {
-                    if (!component.getDocumentation().getDecisions().isEmpty()) {
+                    if (component.getDocumentation() != null && !component.getDocumentation().getDecisions().isEmpty()) {
                         return true;
                     }
                 }
