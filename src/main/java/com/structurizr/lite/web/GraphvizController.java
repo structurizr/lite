@@ -7,6 +7,8 @@ import com.structurizr.lite.Configuration;
 import com.structurizr.util.StringUtils;
 import com.structurizr.util.WorkspaceUtils;
 import com.structurizr.view.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +19,8 @@ import java.nio.file.Files;
 
 @RestController
 public class GraphvizController {
+
+    private static final Log log = LogFactory.getLog(GraphvizController.class);
 
     @PostMapping(value = "/graphviz", consumes = "application/json", produces = "application/json; charset=UTF-8")
     public String post(@RequestBody String json,
@@ -31,7 +35,7 @@ public class GraphvizController {
             try {
                 ThemeUtils.loadThemes(workspace);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.warn("Ignoring themes: " + e.getMessage());
             }
 
             File tmpdir = Files.createTempDirectory(Configuration.getInstance().getWorkDirectory().toPath(), "graphviz").toFile();
