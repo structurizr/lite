@@ -44,6 +44,13 @@ For example, if your Structurizr data directory is located at `/Users/simon/stru
 java -Djdk.util.jar.enableMultiRelease=false -jar structurizr-lite-xxxx.war /Users/simon/structurizr
 ```
 
+Please note that there is [an issue with Windows PowerShell](https://github.com/PowerShell/PowerShell/issues/15541),
+so you may need to quote the system property argument, for example:
+
+```
+java "-Djdk.util.jar.enableMultiRelease=false" -jar structurizr-lite-xxxx.war /Users/simon/structurizr
+```
+
 #### Building your own Docker image
 
 There is a [Dockerfile](https://github.com/structurizr/lite/blob/main/Dockerfile) in the GitHub repo that can be used as a starting point if you'd like to build your own Docker image.
