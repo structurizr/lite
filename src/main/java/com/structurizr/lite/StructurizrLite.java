@@ -4,6 +4,7 @@ import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClient;
 import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.encryption.AesEncryptionStrategy;
+import com.structurizr.graphviz.GraphvizAutomaticLayout;
 import com.structurizr.importer.documentation.DefaultDocumentationImporter;
 import com.structurizr.lite.util.DateUtils;
 import com.structurizr.lite.util.Version;
@@ -122,6 +123,12 @@ public class StructurizrLite extends SpringBootServletInitializer {
 			e.printStackTrace();
 		}
 
+		try {
+			log.info(" - structurizr-graphviz: v" + Class.forName(GraphvizAutomaticLayout.class.getCanonicalName()).getPackage().getImplementationVersion());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		log.info("");
 		log.info("Workspace path: " + Configuration.getInstance().getDataDirectory().getAbsolutePath());
 		log.info("Workspace filename: " + Configuration.getInstance().getWorkspaceFilename() + "[.dsl|.json]");
@@ -131,14 +138,21 @@ public class StructurizrLite extends SpringBootServletInitializer {
 
 		try {
 			ProcessBuilder processBuilder = new ProcessBuilder();
-			processBuilder.command("dot", "--version");
+			processBuilder.command("dot", "-V");
 			Process process = processBuilder.start();
-			process.waitFor();
-			log.info("dot: available");
-			Configuration.getInstance().setGraphvizEnabled(true);
+			int exitCode = process.waitFor();
+
+			String input = new String(process.getInputStream().readAllBytes());
+			String error = new String(process.getErrorStream().readAllBytes());
+			Configuration.getInstance().setGraphvizEnabled(exitCode == 0);
+
+			log.debug("Running: dot -V");
+			log.debug("stdout: " + input);
+			log.debug("stderr: " + error);
 		} catch (Exception e) {
-			log.info("dot: " + e.getMessage());
+			log.warn(e.getMessage());
 		}
+		log.info("Graphviz (dot): " + Configuration.getInstance().isGraphvizEnabled());
 
 		try {
 			long workspaceId = Configuration.getInstance().getRemoteWorkspaceId();
