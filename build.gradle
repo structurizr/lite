@@ -42,20 +42,22 @@ tasks.named('check') {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web:3.0.4'
-	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:10.1.5'
+	implementation 'org.springframework.boot:spring-boot-starter-web:3.1.0'
+	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:10.1.9'
 	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
 
-	implementation 'com.structurizr:structurizr-dsl:1.30.4'
-	implementation 'com.structurizr:structurizr-graphviz:2.1.0'
+	implementation 'com.structurizr:structurizr-dsl:1.31.0'
+	implementation 'com.structurizr:structurizr-graphviz:2.2.0'
 
-	implementation 'org.codehaus.groovy:groovy-jsr223:3.0.13'
+	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
+
+	implementation 'org.codehaus.groovy:groovy-jsr223:3.0.16'
 	implementation 'org.jetbrains.kotlin:kotlin-scripting-jsr223:1.6.21'
-	implementation 'org.jruby:jruby-core:9.4.0.0'
+	implementation 'org.jruby:jruby-core:9.4.2.0'
 
-	implementation 'org.apache.lucene:lucene-core:8.11.1'
-	implementation 'org.apache.lucene:lucene-queryparser:8.11.1'
+	implementation 'org.apache.lucene:lucene-core:9.5.0'
+	implementation 'org.apache.lucene:lucene-queryparser:9.5.0'
 }
 
 bootWar {
