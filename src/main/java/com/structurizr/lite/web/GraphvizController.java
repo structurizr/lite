@@ -25,7 +25,7 @@ public class GraphvizController {
     @PostMapping(value = "/graphviz", consumes = "application/json", produces = "application/json; charset=UTF-8")
     public String post(@RequestBody String json,
                        @RequestParam(required = false) String view,
-                       @RequestParam(required = false, defaultValue = "TB") String rankDirection,
+                       @RequestParam(required = false, defaultValue = "TopBottom") String rankDirection,
                        @RequestParam(required = false, defaultValue = "true") boolean resizePaper,
                        @RequestParam(required = false, defaultValue = "300") int rankSeparation,
                        @RequestParam(required = false, defaultValue = "300") int nodeSeparation,
@@ -116,14 +116,8 @@ public class GraphvizController {
         }
     }
 
-    private RankDirection findRankDirection(String code) {
-        for (RankDirection rankDirection : RankDirection.values()) {
-            if (rankDirection.getCode().equals(code)) {
-                return rankDirection;
-            }
-        }
-
-        return RankDirection.TopBottom;
+    private RankDirection findRankDirection(String s) {
+        return RankDirection.valueOf(s);
     }
 
 }
