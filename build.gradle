@@ -47,7 +47,7 @@ dependencies {
 	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
 
-	implementation 'com.structurizr:structurizr-dsl:1.31.1'
+	implementation 'com.structurizr:structurizr-dsl:1.32.0'
 	implementation 'com.structurizr:structurizr-graphviz:2.2.0'
 
 	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
