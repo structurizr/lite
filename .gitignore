@@ -32,3 +32,4 @@ src/main/webapp/WEB-INF/jsp/review.jsp
 
 docs/structurizr.properties
 docs/workspace.json
+structurizr-*.json
