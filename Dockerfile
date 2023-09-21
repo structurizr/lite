@@ -1,4 +1,5 @@
 FROM eclipse-temurin:17.0.5_8-jre-jammy
+ENV PORT 8080
 
 RUN set -eux; \
 	apt-get update; \
@@ -6,6 +7,6 @@ RUN set -eux; \
 
 ADD build/libs/structurizr-lite.war /usr/local/structurizr-lite.war
 
-EXPOSE 8080
+EXPOSE ${PORT}
 
-CMD ["java", "-Djdk.util.jar.enableMultiRelease=false", "-jar", "/usr/local/structurizr-lite.war"]
+CMD ["java", "-Djdk.util.jar.enableMultiRelease=false", "-Dserver.port=${PORT}", "-jar", "/usr/local/structurizr-lite.war"]
