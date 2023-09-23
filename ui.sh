@@ -42,4 +42,6 @@ cp $STRUCTURIZR_UI_DIR/src/fragments/decisions/* $STRUCTURIZR_LITE_DIR/src/main/
 
 # JSP
 cp $STRUCTURIZR_UI_DIR/src/jsp/* $STRUCTURIZR_LITE_DIR/src/main/webapp/WEB-INF/jsp
+rm $STRUCTURIZR_LITE_DIR/src/main/webapp/WEB-INF/jsp/review.jsp
+rm $STRUCTURIZR_LITE_DIR/src/main/webapp/WEB-INF/jsp/review-create.jsp
 
