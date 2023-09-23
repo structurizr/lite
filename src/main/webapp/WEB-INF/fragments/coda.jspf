@@ -16,7 +16,7 @@
 
     </body>
 
-    <script>
+    <script nonce="${scriptNonce}">
         window.onerror = function (msg, url, lineNo, columnNo, error) {
             logError(msg, url, lineNo, error);
         };

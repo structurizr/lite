@@ -16,6 +16,11 @@ import java.util.TimeZone;
 
 public abstract class AbstractController {
 
+    private static final String CONTENT_SECURITY_POLICY_HEADER = "Content-Security-Policy";
+    private static final String REFERER_POLICY_HEADER = "Referrer-Policy";
+    private static final String REFERER_POLICY_VALUE = "strict-origin-when-cross-origin";
+    private static final String SCRIPT_NONCE_ATTRIBUTE = "scriptNonce";
+
     protected WorkspaceComponent workspaceComponent;
 
     @ModelAttribute("structurizrConfiguration")
@@ -25,10 +30,12 @@ public abstract class AbstractController {
 
     @ModelAttribute
     protected void addSecurityHeaders(HttpServletResponse response, ModelMap model) {
-        response.addHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+        response.addHeader(REFERER_POLICY_HEADER, REFERER_POLICY_VALUE);
 
         String nonce = Base64.getEncoder().encodeToString(new RandomGuidGenerator().generate().getBytes(StandardCharsets.UTF_8));
-        model.addAttribute("scriptNonce", nonce);
+        model.addAttribute(SCRIPT_NONCE_ATTRIBUTE, nonce);
+
+        response.addHeader(CONTENT_SECURITY_POLICY_HEADER, String.format("script-src 'self' 'nonce-%s'", nonce));
     }
 
     @ModelAttribute
