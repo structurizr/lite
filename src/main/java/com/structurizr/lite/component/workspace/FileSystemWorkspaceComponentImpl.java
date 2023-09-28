@@ -237,7 +237,6 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
             "    views {\n" +
             "        systemContext softwareSystem \"Diagram1\" {\n" +
             "            include *\n" +
-            "            autoLayout\n" +
             "        }\n" +
             "    }\n" +
             "\n" +
