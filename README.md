@@ -11,6 +11,11 @@ If you change this file (e.g. via your text editor or one of the Structurizr cli
 
 ## Building from source
 
+To build and run from source, you'll need:
+
+- Java 17+ (required)
+- [Graphviz](https://graphviz.org/download/) (optional; if you want to use automatic layout)
+
 - Note 1: The HTML, JS, CSS, JSP, etc files are in a separate [structurizr/ui](https://github.com/structurizr/ui) repo because they are shared with the on-premises installation and cloud service.
 - Note 2: Building and running from source has only been tested with Java 17.
 
