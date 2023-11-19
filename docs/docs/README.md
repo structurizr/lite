@@ -1,0 +1,1 @@
+See [https://docs.structurizr.com/lite](https://docs.structurizr.com/lite) for the Lite documentation.
