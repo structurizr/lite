@@ -7,6 +7,7 @@ import com.structurizr.lite.component.search.SearchComponent;
 import com.structurizr.lite.util.DateUtils;
 import com.structurizr.lite.util.InputStreamAndContentLength;
 import com.structurizr.util.WorkspaceUtils;
+import com.structurizr.validation.WorkspaceScopeValidatorFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -122,6 +123,9 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
                 parser.parse(file);
                 workspace = parser.getWorkspace();
                 workspace.setId(1);
+
+                // validate workspace scope
+                WorkspaceScopeValidatorFactory.getValidator(workspace).validate(workspace);
 
                 if (!workspace.getModel().isEmpty() && workspace.getViews().isEmpty()) {
                     workspace.getViews().createDefaultViews();
