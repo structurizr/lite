@@ -229,22 +229,27 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
         return path;
     }
 
-    private static final String DSL_TEMPLATE = "workspace {\n" +
-            "\n" +
-            "    model {\n" +
-            "        user = person \"User\"\n" +
-            "        softwareSystem = softwareSystem \"Software System\"\n" +
-            "\n" +
-            "        user -> softwareSystem \"Uses\"\n" +
-            "    }\n" +
-            "\n" +
-            "    views {\n" +
-            "        systemContext softwareSystem \"Diagram1\" {\n" +
-            "            include *\n" +
-            "        }\n" +
-            "    }\n" +
-            "\n" +
-            "}";
+    private static final String DSL_TEMPLATE = """
+            workspace {
+                        
+                model {
+                    user = person "User"
+                    softwareSystem = softwareSystem "Software System"
+                        
+                    user -> softwareSystem "Uses"
+                }
+                        
+                views {
+                    systemContext softwareSystem "Diagram1" {
+                        include *
+                    }
+                }
+                        
+                configuration {
+                    scope softwaresystem
+                }
+                        
+            }""";
 
     @Scheduled(fixedDelayString = "#{@applicationPropertyService.getAutoRefreshInterval()}")
     public void checkForUpdatedFiles() {
