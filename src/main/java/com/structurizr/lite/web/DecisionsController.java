@@ -9,12 +9,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 @Controller
 public class DecisionsController extends AbstractController {
 
     @RequestMapping(value = "/workspace/decisions", method = RequestMethod.GET)
     public String showDecisionsForWorkspace(ModelMap model) {
-        model.addAttribute("scope", "*");
+        String scope = "*";
+        model.addAttribute("scope", Base64.getEncoder().encodeToString(scope.getBytes(StandardCharsets.UTF_8)));
 
         return showDecisions(model);
     }
@@ -24,7 +28,8 @@ public class DecisionsController extends AbstractController {
             @PathVariable(value="softwareSystem") String softwareSystem,
             ModelMap model
     ) {
-        model.addAttribute("scope", HtmlUtils.filterHtml(softwareSystem));
+        String scope = softwareSystem;
+        model.addAttribute("scope", Base64.getEncoder().encodeToString(scope.getBytes(StandardCharsets.UTF_8)));
 
         return showDecisions(model);
     }
@@ -35,7 +40,8 @@ public class DecisionsController extends AbstractController {
             @PathVariable(value="container") String container,
             ModelMap model
     ) {
-        model.addAttribute("scope", HtmlUtils.filterHtml(softwareSystem) + "/" + HtmlUtils.filterHtml(container));
+        String scope = softwareSystem + "/" + container;
+        model.addAttribute("scope", Base64.getEncoder().encodeToString(scope.getBytes(StandardCharsets.UTF_8)));
 
         return showDecisions(model);
     }
@@ -47,7 +53,8 @@ public class DecisionsController extends AbstractController {
             @PathVariable(value="component") String component,
             ModelMap model
     ) {
-        model.addAttribute("scope", HtmlUtils.filterHtml(softwareSystem) + "/" + HtmlUtils.filterHtml(container) + "/" + HtmlUtils.filterHtml(component));
+        String scope = softwareSystem + "/" + container + "/" + component;
+        model.addAttribute("scope", Base64.getEncoder().encodeToString(scope.getBytes(StandardCharsets.UTF_8)));
 
         return showDecisions(model);
     }
