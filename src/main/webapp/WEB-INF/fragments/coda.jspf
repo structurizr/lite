@@ -5,7 +5,7 @@
         <p>
             <a href="https://structurizr.com/help/lite" target="_blank">Structurizr Lite</a>
             |
-            <a href="https://structurizr.com/help/changelog" target="_blank"><span id="buildNumber">Build ${version.buildNumber}</span></a> <!-- <fmt:formatDate value="${version.buildTimestamp}" pattern="EEE dd MMM yyyy HH:mm z" /> -->
+            <span id="buildNumber">Build ${version.buildNumber}</span> <!-- <fmt:formatDate value="${version.buildTimestamp}" pattern="EEE dd MMM yyyy HH:mm z" /> -->
             |
             <a href="https://docs.structurizr.com/lite" target="_blank">Documentation</a>
             |
