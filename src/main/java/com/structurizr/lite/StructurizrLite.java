@@ -1,7 +1,7 @@
 package com.structurizr.lite;
 
 import com.structurizr.Workspace;
-import com.structurizr.api.StructurizrClient;
+import com.structurizr.api.WorkspaceApiClient;
 import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.encryption.AesEncryptionStrategy;
 import com.structurizr.graphviz.GraphvizAutomaticLayout;
@@ -157,12 +157,10 @@ public class StructurizrLite extends SpringBootServletInitializer {
 		try {
 			long workspaceId = Configuration.getInstance().getRemoteWorkspaceId();
 			if (workspaceId > 0) {
-				StructurizrClient structurizrClient = createStructurizrClient();
-
 				log.info("");
-				log.info("Pulling workspace from " + structurizrClient.getUrl() + " with ID " + workspaceId);
+				log.info("Pulling workspace from " + Configuration.getInstance().getRemoteApiUrl() + " with ID " + workspaceId);
 
-				Workspace workspace = structurizrClient.getWorkspace(workspaceId);
+				Workspace workspace = createWorkspaceApiClient().getWorkspace(workspaceId);
 
 				File jsonFile = new File(Configuration.getInstance().getDataDirectory(), Configuration.getInstance().getWorkspaceFilename() + ".json");
 				if (workspace.getLastModifiedDate().getTime() > jsonFile.lastModified()) {
@@ -210,14 +208,12 @@ public class StructurizrLite extends SpringBootServletInitializer {
 		try {
 			long workspaceId = Configuration.getInstance().getRemoteWorkspaceId();
 			if (workspaceId > 0) {
-				StructurizrClient structurizrClient = createStructurizrClient();
-
 				log.info("");
-				log.info("Pushing workspace to " + structurizrClient.getUrl() + " with ID " + workspaceId);
+				log.info("Pushing workspace to " + Configuration.getInstance().getRemoteApiUrl() + " with ID " + workspaceId);
 
 				Workspace workspace = WorkspaceUtils.loadWorkspaceFromJson(new File(Configuration.getInstance().getDataDirectory(), Configuration.getInstance().getWorkspaceFilename() + ".json"));
 				workspace.setRevision(null);
-				structurizrClient.putWorkspace(workspaceId, workspace);
+				createWorkspaceApiClient().putWorkspace(workspaceId, workspace);
 			}
 		} catch (Exception e) {
 			log.error(e);
@@ -227,21 +223,21 @@ public class StructurizrLite extends SpringBootServletInitializer {
 	}
 
 
-	private static StructurizrClient createStructurizrClient() {
+	private static WorkspaceApiClient createWorkspaceApiClient() {
 		String apiUrl = Configuration.getInstance().getRemoteApiUrl();
 		String apiKey = Configuration.getInstance().getRemoteApiKey();
 		String apiSecret = Configuration.getInstance().getRemoteApiSecret();
 		String passphrase = Configuration.getInstance().getRemotePassphrase();
 
-		StructurizrClient structurizrClient = new StructurizrClient(apiUrl, apiKey, apiSecret);
-		structurizrClient.setAgent("structurizr-lite/" + new Version().getBuildNumber());
-		structurizrClient.setUser(System.getenv(STRUCTURIZR_USERNAME));
+		WorkspaceApiClient client = new WorkspaceApiClient(apiUrl, apiKey, apiSecret);
+		client.setAgent("structurizr-lite/" + new Version().getBuildNumber());
+		client.setUser(System.getenv(STRUCTURIZR_USERNAME));
 		if (!StringUtils.isNullOrEmpty(passphrase)) {
-			structurizrClient.setEncryptionStrategy(new AesEncryptionStrategy(passphrase));
+			client.setEncryptionStrategy(new AesEncryptionStrategy(passphrase));
 		}
-		structurizrClient.setMergeFromRemote(false);
+		client.setMergeFromRemote(false);
 
-		return structurizrClient;
+		return client;
 	}
 
 }
