@@ -1,8 +1,8 @@
 package com.structurizr.lite.web;
 
 import com.structurizr.Workspace;
-import com.structurizr.graphviz.GraphvizAutomaticLayout;
-import com.structurizr.graphviz.RankDirection;
+import com.structurizr.autolayout.graphviz.GraphvizAutomaticLayout;
+import com.structurizr.autolayout.graphviz.RankDirection;
 import com.structurizr.lite.Configuration;
 import com.structurizr.util.StringUtils;
 import com.structurizr.util.WorkspaceUtils;
