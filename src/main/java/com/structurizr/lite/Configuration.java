@@ -205,6 +205,10 @@ public class Configuration {
             value = defaultValue;
         }
 
+        if (value != null) {
+            value = value.trim();
+        }
+
         return value;
     }
 
