@@ -62,18 +62,6 @@ public class ApiController extends AbstractController {
 
             workspaceComponent.putWorkspace(WorkspaceUtils.fromJson(json));
 
-            try {
-                try {
-                    JsonReader jsonReader = new JsonReader();
-                    StringReader stringReader = new StringReader(json);
-                    Workspace workspace = jsonReader.read(stringReader);
-                } catch (WorkspaceReaderException e) {
-                    throw new ApiException(e.getMessage());
-                }
-            } catch (Exception e) {
-                log.error(e);
-            }
-
             return new ApiResponse("OK");
         } catch (Exception e) {
             log.error(e);
