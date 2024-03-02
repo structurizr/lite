@@ -52,9 +52,9 @@ dependencies {
 	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
 
-	implementation 'com.structurizr:structurizr-dsl:2.0.0'
-	implementation 'com.structurizr:structurizr-autolayout:2.0.0'
-	implementation 'com.structurizr:structurizr-inspection:2.0.0'
+	implementation 'com.structurizr:structurizr-dsl:2.1.0'
+	implementation 'com.structurizr:structurizr-autolayout:2.1.0'
+	implementation 'com.structurizr:structurizr-inspection:2.1.0'
 
 	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
 
