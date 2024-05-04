@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '3.2.2'
+	id 'org.springframework.boot' version '3.2.5'
 	id 'io.spring.dependency-management' version '1.1.0'
 	id 'java'
 	id 'jvm-test-suite'
@@ -48,15 +48,15 @@ ext {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:10.1.15'
+	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:10.1.23'
 	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
 
-	implementation 'com.structurizr:structurizr-dsl:2.1.1'
-	implementation 'com.structurizr:structurizr-autolayout:2.1.1'
-	implementation 'com.structurizr:structurizr-inspection:2.1.1'
+	implementation 'com.structurizr:structurizr-dsl:2.1.2'
+	implementation 'com.structurizr:structurizr-autolayout:2.1.2'
+	implementation 'com.structurizr:structurizr-inspection:2.1.2'
 
-	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
+	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.3'
 
 	implementation 'org.codehaus.groovy:groovy-jsr223:3.0.19'
 	implementation 'org.jetbrains.kotlin:kotlin-scripting-jsr223:1.8.10'
