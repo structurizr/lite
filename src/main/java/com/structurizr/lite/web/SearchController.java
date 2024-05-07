@@ -44,16 +44,14 @@ public class SearchController extends AbstractController {
         if (!StringUtils.isNullOrEmpty(query)) {
             List<SearchResult> searchResults = searchComponent.search(query, category);
             for (SearchResult searchResult : searchResults) {
-                searchResult.setWorkspace(new WorkspaceMetaData());
+                searchResult.setWorkspace(new WorkspaceMetaData(searchResult.getWorkspaceId()));
                 filteredSearchResults.add(searchResult);
             }
         }
 
         model.addAttribute("query", query);
-        model.addAttribute("workspaceId", "1");
         model.addAttribute("category", category);
         model.addAttribute("results", filteredSearchResults);
-        model.addAttribute("urlPrefix", "/workspace");
         addCommonAttributes(model, "Search", true);
 
         return "search-results";

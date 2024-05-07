@@ -4,6 +4,7 @@ import com.structurizr.Workspace;
 import com.structurizr.documentation.Decision;
 import com.structurizr.documentation.Format;
 import com.structurizr.documentation.Section;
+import com.structurizr.lite.Configuration;
 import com.structurizr.model.Component;
 import com.structurizr.model.Container;
 import com.structurizr.model.SoftwareSystem;
@@ -22,18 +23,19 @@ public class ApacheLuceneSearchComponentTests {
 
     private static final File DATA_DIRECTORY = new File("./build/ApacheLuceneSearchComponentTests");
 
+    private File dataDirectory;
     private ApacheLuceneSearchComponentImpl searchComponent;
 
     @BeforeEach
     public void setUp() throws Exception {
-        Files.createDirectory(DATA_DIRECTORY.toPath());
-        searchComponent = new ApacheLuceneSearchComponentImpl(DATA_DIRECTORY);
-        searchComponent.start();
+        DATA_DIRECTORY.mkdirs();
+        dataDirectory = Files.createTempDirectory(DATA_DIRECTORY.toPath(), "").toFile();
+        searchComponent = new ApacheLuceneSearchComponentImpl(dataDirectory);
     }
 
     @AfterEach
     public void tearDown() {
-        FileSystemUtils.deleteRecursively(DATA_DIRECTORY);
+        FileSystemUtils.deleteRecursively(dataDirectory);
     }
 
     @Test
@@ -47,7 +49,7 @@ public class ApacheLuceneSearchComponentTests {
 
         SearchResult result = results.get(0);
         assertEquals("workspace", result.getType());
-        assertEquals("", result.getUrl());
+        assertEquals("/workspace", result.getUrl());
         assertEquals("Name", result.getName());
         assertEquals("Description", result.getDescription());
     }
@@ -67,7 +69,7 @@ public class ApacheLuceneSearchComponentTests {
         SearchResult result = results.get(0);
         assertEquals(1, result.getWorkspaceId());
         assertEquals("workspace", result.getType());
-        assertEquals("", result.getUrl());
+        assertEquals("/workspace", result.getUrl());
         assertEquals("Name", result.getName());
         assertEquals("New", result.getDescription());
     }
@@ -110,12 +112,12 @@ Bar
         List<SearchResult> results = searchComponent.search("foo", null);
         assertEquals(1, results.size());
         assertEquals("W - Section 1", results.get(0).getName());
-        assertEquals("/documentation#1", results.get(0).getUrl());
+        assertEquals("/workspace/documentation#1", results.get(0).getUrl());
 
         results = searchComponent.search("bar", null);
         assertEquals(1, results.size());
         assertEquals("W - Section 2", results.get(0).getName());
-        assertEquals("/documentation#2", results.get(0).getUrl());
+        assertEquals("/workspace/documentation#2", results.get(0).getUrl());
     }
 
     @Test
@@ -141,12 +143,12 @@ Bar
         List<SearchResult> results = searchComponent.search("foo", null);
         assertEquals(1, results.size());
         assertEquals("A - Section 1", results.get(0).getName());
-        assertEquals("/documentation/A#1", results.get(0).getUrl());
+        assertEquals("/workspace/documentation/A#1", results.get(0).getUrl());
 
         results = searchComponent.search("bar", null);
         assertEquals(1, results.size());
         assertEquals("A - Section 2", results.get(0).getName());
-        assertEquals("/documentation/A#2", results.get(0).getUrl());
+        assertEquals("/workspace/documentation/A#2", results.get(0).getUrl());
     }
 
     @Test
@@ -173,12 +175,12 @@ Bar
         List<SearchResult> results = searchComponent.search("foo", null);
         assertEquals(1, results.size());
         assertEquals("B - Section 1", results.get(0).getName());
-        assertEquals("/documentation/A/B#1", results.get(0).getUrl());
+        assertEquals("/workspace/documentation/A/B#1", results.get(0).getUrl());
 
         results = searchComponent.search("bar", null);
         assertEquals(1, results.size());
         assertEquals("B - Section 2", results.get(0).getName());
-        assertEquals("/documentation/A/B#2", results.get(0).getUrl());
+        assertEquals("/workspace/documentation/A/B#2", results.get(0).getUrl());
     }
 
     @Test
@@ -206,12 +208,12 @@ Bar
         List<SearchResult> results = searchComponent.search("foo", null);
         assertEquals(1, results.size());
         assertEquals("C - Section 1", results.get(0).getName());
-        assertEquals("/documentation/A/B/C#1", results.get(0).getUrl());
+        assertEquals("/workspace/documentation/A/B/C#1", results.get(0).getUrl());
 
         results = searchComponent.search("bar", null);
         assertEquals(1, results.size());
         assertEquals("C - Section 2", results.get(0).getName());
-        assertEquals("/documentation/A/B/C#2", results.get(0).getUrl());
+        assertEquals("/workspace/documentation/A/B/C#2", results.get(0).getUrl());
     }
 
     @Test
@@ -238,7 +240,7 @@ Foo
         List<SearchResult> results = searchComponent.search("foo", null);
         assertEquals(1, results.size());
         assertEquals("A - 1. Title", results.get(0).getName());
-        assertEquals("/decisions/A#1", results.get(0).getUrl());
+        assertEquals("/workspace/decisions/A#1", results.get(0).getUrl());
     }
 
     @Test
@@ -266,7 +268,7 @@ Foo
         List<SearchResult> results = searchComponent.search("foo", null);
         assertEquals(1, results.size());
         assertEquals("B - 1. Title", results.get(0).getName());
-        assertEquals("/decisions/A/B#1", results.get(0).getUrl());
+        assertEquals("/workspace/decisions/A/B#1", results.get(0).getUrl());
     }
 
     @Test
@@ -295,7 +297,7 @@ Foo
         List<SearchResult> results = searchComponent.search("foo", null);
         assertEquals(1, results.size());
         assertEquals("C - 1. Title", results.get(0).getName());
-        assertEquals("/decisions/A/B/C#1", results.get(0).getUrl());
+        assertEquals("/workspace/decisions/A/B/C#1", results.get(0).getUrl());
     }
 
 }

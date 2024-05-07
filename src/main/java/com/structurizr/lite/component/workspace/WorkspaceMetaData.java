@@ -6,6 +6,7 @@ import java.util.Date;
 
 public class WorkspaceMetaData {
 
+    private long workspaceId;
     private String name;
     private String description;
     private String version;
@@ -24,11 +25,12 @@ public class WorkspaceMetaData {
 
     private String owner;
 
-    public WorkspaceMetaData() {
+    public WorkspaceMetaData(long workspaceId) {
+        this.workspaceId = workspaceId;
     }
 
     public long getId() {
-        return 1;
+        return workspaceId;
     }
 
     public String getName() {

@@ -4,12 +4,12 @@ import com.structurizr.lite.component.workspace.WorkspaceMetaData;
 
 public final class SearchResult {
 
-    private long workspaceId;
+    private final long workspaceId;
     private WorkspaceMetaData workspace;
-    private String url;
-    private String name;
-    private String description;
-    private String type;
+    private final String url;
+    private final String name;
+    private final String description;
+    private final String type;
 
     public SearchResult(long workspaceId, String url, String name, String description, String type) {
         this.workspaceId = workspaceId;

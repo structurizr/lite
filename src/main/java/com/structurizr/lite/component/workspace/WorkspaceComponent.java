@@ -7,17 +7,15 @@ public interface WorkspaceComponent {
 
     void start() throws Exception;
 
-    void createTemplate();
-
-    Workspace getWorkspace();
+    Workspace getWorkspace(long workspaceId);
 
     void putWorkspace(Workspace workspace) throws WorkspaceComponentException;
 
     String getError();
 
-    InputStreamAndContentLength getImage(String diagramKey) throws WorkspaceComponentException;
+    InputStreamAndContentLength getImage(long workspaceId, String diagramKey) throws WorkspaceComponentException;
 
-    boolean putImage(String filename, String imageAsBase64) throws WorkspaceComponentException;
+    boolean putImage(long workspaceId, String filename, String imageAsBase64) throws WorkspaceComponentException;
 
     long getLastModifiedDate();
 

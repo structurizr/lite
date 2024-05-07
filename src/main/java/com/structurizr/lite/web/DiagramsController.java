@@ -26,15 +26,27 @@ public class DiagramsController extends AbstractController {
     @RequestMapping(value = "/workspace/diagrams", method = RequestMethod.GET)
     public String showDiagrams(ModelMap model,
                                @RequestParam(required = false) String perspective) {
-        WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData();
+        if (Configuration.getInstance().isSingleWorkspace()) {
+            return showDiagrams(1, model, perspective);
+        } else {
+            return "redirect:/workspace/1/diagrams";
+        }
+    }
+
+    @RequestMapping(value = "/workspace/{workspaceId}/diagrams", method = RequestMethod.GET)
+    public String showDiagrams(@PathVariable("workspaceId") long workspaceId,
+                               ModelMap model,
+                               @RequestParam(required = false) String perspective) {
+        WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(workspaceId);
         workspaceMetaData.setEditable(Configuration.getInstance().isEditable());
         workspaceMetaData.setApiKey(Configuration.getInstance().getApiKey());
         workspaceMetaData.setApiSecret(Configuration.getInstance().getApiSecret());
 
         addCommonAttributes(model, "Structurizr Lite", false);
         model.addAttribute("workspace", workspaceMetaData);
-        model.addAttribute("urlPrefix", "/workspace");
-        model.addAttribute("thumbnailUrl", "/workspace/images/");
+        model.addAttribute("urlPrefix", calculateUrlPrefix(workspaceId));
+        model.addAttribute("thumbnailUrl", "/workspace/" + workspaceId + "/images/");
+
         model.addAttribute("showToolbar", true);
         model.addAttribute("embed", false);
         if (workspaceMetaData.isEditable()) {
@@ -50,8 +62,10 @@ public class DiagramsController extends AbstractController {
         return "diagrams";
     }
 
-    @RequestMapping(value = "/workspace/1/images/{filename:.+}", method = RequestMethod.OPTIONS)
-    public void optionsWorkspaceImage(@PathVariable("filename") String filename, HttpServletResponse response) {
+    @RequestMapping(value = "/workspace/{workspaceId}/images/{filename:.+}", method = RequestMethod.OPTIONS)
+    public void optionsWorkspaceImage(@PathVariable("workspaceId") long workspaceId,
+                                      @PathVariable("filename") String filename,
+                                      HttpServletResponse response) {
         addAccessControlAllowHeaders(response);
     }
 
@@ -61,13 +75,14 @@ public class DiagramsController extends AbstractController {
         response.addHeader("Access-Control-Allow-Methods", "GET, PUT");
     }
 
-    @RequestMapping(value = "/workspace/1/images/{filename:.+}", method = RequestMethod.PUT, consumes = "text/plain", produces = "application/json; charset=UTF-8")
-    public @ResponseBody ApiResponse putWorkspaceImage(@PathVariable("filename")String filename,
+    @RequestMapping(value = "/workspace/{workspaceId}/images/{filename:.+}", method = RequestMethod.PUT, consumes = "text/plain", produces = "application/json; charset=UTF-8")
+    public @ResponseBody ApiResponse putWorkspaceImage(@PathVariable("workspaceId") long workspaceId,
+                                                       @PathVariable("filename")String filename,
                                                        @RequestBody String imageAsBase64EncodedDataUri,
                                                        @ModelAttribute("remoteIpAddress") String ipAddress) {
 
         try {
-            if (workspaceComponent.putImage(filename, imageAsBase64EncodedDataUri)) {
+            if (workspaceComponent.putImage(workspaceId, filename, imageAsBase64EncodedDataUri)) {
                 return new ApiResponse("OK");
             } else {
                 throw new ApiException("Failed to save image");
@@ -79,14 +94,15 @@ public class DiagramsController extends AbstractController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/workspace/images/{diagramKey}.png", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
-    public Resource getImage(@PathVariable("diagramKey") String diagramKey,
+    @RequestMapping(value = "/workspace/{workspaceId}/images/{diagramKey}.png", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
+    public Resource getImage(@PathVariable("workspaceId") long workspaceId,
+                             @PathVariable("diagramKey") String diagramKey,
                              HttpServletResponse response) {
         diagramKey = HtmlUtils.filterHtml(diagramKey);
 
         if (diagramKey.equals("thumbnail") || diagramKey.endsWith("-thumbnail")) {
             try {
-                InputStreamAndContentLength inputStreamAndContentLength = workspaceComponent.getImage(diagramKey + ".png");
+                InputStreamAndContentLength inputStreamAndContentLength = workspaceComponent.getImage(workspaceId, diagramKey + ".png");
                 if (inputStreamAndContentLength != null) {
                     return new InputStreamResource(inputStreamAndContentLength.getInputStream()) {
                         @Override

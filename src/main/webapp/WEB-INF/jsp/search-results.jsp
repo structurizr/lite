@@ -21,10 +21,13 @@
                                     <c:when test="${result.type eq 'diagram'}">
                                         Diagram
                                     </c:when>
+                                    <c:otherwise>
+                                        Workspace
+                                    </c:otherwise>
                                 </c:choose>
                             </td>
                             <td>
-                                <a href="${urlPrefix}${result.url}"><c:out value="${result.name}" escapeXml="true" /></a>
+                                <a href="${result.url}"><c:out value="${result.name}" escapeXml="true" /></a>
                                 <div class="smaller" style="margin-top: 5px">
                                     <c:out value="${result.description}" escapeXml="true" />
                                 </div>

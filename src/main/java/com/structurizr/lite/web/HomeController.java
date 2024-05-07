@@ -1,8 +1,7 @@
 package com.structurizr.lite.web;
 
-
 import com.structurizr.Workspace;
-import com.structurizr.lite.component.workspace.NoWorkspaceFoundException;
+import com.structurizr.lite.Configuration;
 import com.structurizr.model.Component;
 import com.structurizr.model.Container;
 import com.structurizr.model.SoftwareSystem;
@@ -10,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -18,10 +18,21 @@ public class HomeController extends AbstractController {
 
     private static final Log log = LogFactory.getLog(HomeController.class);
 
-    @RequestMapping(value = { "/", "/workspace" }, method = RequestMethod.GET)
-    public String showDefaultPage(ModelMap model) {
+    @RequestMapping(value = { "/" }, method = RequestMethod.GET)
+    public String showHomePage(ModelMap model) {
+        return showWorkspace(1, model);
+    }
+
+    @RequestMapping(value = { "/workspace" }, method = RequestMethod.GET)
+    public String showWorkspace(ModelMap model) {
+        return showWorkspace(1, model);
+    }
+
+    @RequestMapping(value = { "/workspace/{workspaceId}" }, method = RequestMethod.GET)
+    public String showWorkspace(@PathVariable("workspaceId") long workspaceId,
+                                ModelMap model) {
         try {
-            Workspace workspace = workspaceComponent.getWorkspace();
+            Workspace workspace = workspaceComponent.getWorkspace(workspaceId);
             if (workspace == null) {
                 model.addAttribute("error", workspaceComponent.getError());
 
@@ -30,11 +41,23 @@ public class HomeController extends AbstractController {
             }
 
             if (hasDocumentation(workspace)) {
-                return "redirect:/workspace/documentation";
+                if (Configuration.getInstance().isSingleWorkspace()) {
+                    return "redirect:/workspace/documentation";
+                } else {
+                    return "redirect:/workspace/" + workspaceId + "/documentation";
+                }
             } else if (hasDecisions(workspace)) {
-                return "redirect:/workspace/decisions";
+                if (Configuration.getInstance().isSingleWorkspace()) {
+                    return "redirect:/workspace/decisions";
+                } else {
+                    return "redirect:/workspace/" + workspaceId + "/decisions";
+                }
             } else {
-                return "redirect:/workspace/diagrams";
+                if (Configuration.getInstance().isSingleWorkspace()) {
+                    return "redirect:/workspace/diagrams";
+                } else {
+                    return "redirect:/workspace/" + workspaceId + "/diagrams";
+                }
             }
         } catch (Exception e) {
             log.error(e.getMessage());

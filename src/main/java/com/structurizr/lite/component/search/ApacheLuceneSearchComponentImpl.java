@@ -8,6 +8,7 @@ import com.structurizr.lite.Configuration;
 import com.structurizr.model.*;
 import com.structurizr.util.StringUtils;
 import com.structurizr.view.*;
+import jakarta.annotation.PreDestroy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.Analyzer;
@@ -54,17 +55,19 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
     private static final String NEWLINE = "\n";
 
     private final File indexDirectory;
+    private IndexWriter indexWriter;
 
     ApacheLuceneSearchComponentImpl() {
         indexDirectory = new File(Configuration.getInstance().getWorkDirectory(), INDEX_DIRECTORY_NAME);
+        start();
     }
 
     ApacheLuceneSearchComponentImpl(File workDirectory) {
         indexDirectory = new File(workDirectory, INDEX_DIRECTORY_NAME);
+        start();
     }
 
-    @Override
-    public void start() {
+    private void start() {
         if (!indexDirectory.exists()) {
             try {
                 Files.createDirectory(indexDirectory.toPath());
@@ -72,78 +75,105 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
                 log.error(e);
             }
         }
+
+        Analyzer analyzer = new StandardAnalyzer();
+        IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
+        iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+
+        try {
+            Directory dir = FSDirectory.open(indexDirectory.toPath());
+            indexWriter = new IndexWriter(dir, iwc);
+        } catch (IOException e) {
+            log.error(e);
+        }
     }
 
-    @Override
+    @PreDestroy
     public void stop() {
+        try {
+            if (indexWriter != null) {
+                indexWriter.close();
+            }
+        } catch (IOException e) {
+            log.warn(e);
+        }
+    }
+
+    private void delete(long workspaceId) {
+        try {
+            Term workspaceIdTerm = new Term(WORKSPACE_KEY, toString(workspaceId));
+            indexWriter.deleteDocuments(workspaceIdTerm);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e);
+        }
     }
 
     @Override
     public void index(Workspace workspace) {
         try {
-            FileSystemUtils.deleteRecursively(indexDirectory);
-            Files.createDirectory(indexDirectory.toPath());
-
-            Analyzer analyzer = new StandardAnalyzer();
-            IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
-            iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-
-            Directory dir = FSDirectory.open(indexDirectory.toPath());
-            IndexWriter writer = new IndexWriter(dir, iwc);
+            delete(workspace.getId());
 
             Document doc = new Document();
-            doc.add(new StoredField(URL_KEY, ""));
+            doc.add(new StoredField(URL_KEY, calculateUrlPrefix(workspace)));
             doc.add(new TextField(WORKSPACE_KEY, toString(workspace.getId()), Field.Store.YES));
             doc.add(new TextField(TYPE_KEY, DocumentType.WORKSPACE, Field.Store.YES));
             doc.add(new StoredField(NAME_KEY, workspace.getName()));
             doc.add(new StoredField(DESCRIPTION_KEY, workspace.getDescription()));
             doc.add(new TextField(CONTENT_KEY, appendAll(workspace.getName(), workspace.getDescription()), Field.Store.NO));
-            writer.addDocument(doc);
+            indexWriter.addDocument(doc);
+            indexWriter.commit();
 
             for (CustomView view : workspace.getViews().getCustomViews()) {
-                index(workspace, view, writer);
+                index(workspace, view, indexWriter);
             }
             for (SystemLandscapeView view : workspace.getViews().getSystemLandscapeViews()) {
-                index(workspace, view, writer);
+                index(workspace, view, indexWriter);
             }
             for (SystemContextView view : workspace.getViews().getSystemContextViews()) {
-                index(workspace, view, writer);
+                index(workspace, view, indexWriter);
             }
             for (ContainerView view : workspace.getViews().getContainerViews()) {
-                index(workspace, view, writer);
+                index(workspace, view, indexWriter);
             }
             for (ComponentView view : workspace.getViews().getComponentViews()) {
-                index(workspace, view, writer);
+                index(workspace, view, indexWriter);
             }
             for (DynamicView view : workspace.getViews().getDynamicViews()) {
-                index(workspace, view, writer);
+                index(workspace, view, indexWriter);
             }
             for (DeploymentView view : workspace.getViews().getDeploymentViews()) {
-                index(workspace, view, writer);
+                index(workspace, view, indexWriter);
             }
 
-            indexDocumentationAndDecisions(workspace, null, workspace.getDocumentation(), writer);
+            indexDocumentationAndDecisions(workspace, null, workspace.getDocumentation(), indexWriter);
             for (SoftwareSystem softwareSystem : workspace.getModel().getSoftwareSystems()) {
-                indexDocumentationAndDecisions(workspace, softwareSystem, softwareSystem.getDocumentation(), writer);
+                indexDocumentationAndDecisions(workspace, softwareSystem, softwareSystem.getDocumentation(), indexWriter);
 
                 for (Container container : softwareSystem.getContainers()) {
-                    indexDocumentationAndDecisions(workspace, container, container.getDocumentation(), writer);
+                    indexDocumentationAndDecisions(workspace, container, container.getDocumentation(), indexWriter);
 
                     for (Component component : container.getComponents()) {
-                        indexDocumentationAndDecisions(workspace, component, component.getDocumentation(), writer);
+                        indexDocumentationAndDecisions(workspace, component, component.getDocumentation(), indexWriter);
                     }
                 }
             }
-
-            writer.close();
         } catch (Exception e) {
             log.error(e);
         }
     }
 
+    private String calculateUrlPrefix(Workspace workspace) {
+        if (Configuration.getInstance().isSingleWorkspace()) {
+            return "/workspace";
+        } else {
+            return "/workspace/" + workspace.getId();
+        }
+    }
+
     private void index(Workspace workspace, ModelView view, IndexWriter indexWriter) throws Exception {
         Document doc = new Document();
-        doc.add(new StoredField(URL_KEY, DIAGRAMS_PATH + "#" + view.getKey()));
+        doc.add(new StoredField(URL_KEY, calculateUrlPrefix(workspace) + DIAGRAMS_PATH + "#" + view.getKey()));
         doc.add(new TextField(WORKSPACE_KEY, toString(workspace.getId()), Field.Store.YES));
         doc.add(new TextField(TYPE_KEY, DocumentType.DIAGRAM, Field.Store.YES));
         doc.add(new StoredField(NAME_KEY, view.getName()));
@@ -211,6 +241,7 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
         doc.add(new TextField(CONTENT_KEY, content.toString(), Field.Store.NO));
 
         indexWriter.addDocument(doc);
+        indexWriter.commit();
     }
 
     private String indexElementBasics(Element element) {
@@ -311,7 +342,7 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
     private void indexDocumentationSection(String title, String content, int sectionNumber, Workspace workspace, Element element, IndexWriter indexWriter) throws Exception {
         Document doc = new Document();
 
-        doc.add(new StoredField(URL_KEY, DOCUMENTATION_PATH + calculateUrlForSection(element, sectionNumber)));
+        doc.add(new StoredField(URL_KEY, calculateUrlPrefix(workspace) + DOCUMENTATION_PATH + calculateUrlForSection(element, sectionNumber)));
         doc.add(new TextField(WORKSPACE_KEY, toString(workspace.getId()), Field.Store.YES));
         doc.add(new TextField(TYPE_KEY, DocumentType.DOCUMENTATION, Field.Store.YES));
         if (element == null) {
@@ -330,12 +361,13 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
         doc.add(new StoredField(DESCRIPTION_KEY, ""));
         doc.add(new TextField(CONTENT_KEY, appendAll(title, content.toString()), Field.Store.NO));
         indexWriter.addDocument(doc);
+        indexWriter.commit();
     }
 
     private void indexDecision(Workspace workspace, Element element, Decision decision, IndexWriter indexWriter) throws Exception {
         Document doc = new Document();
 
-        doc.add(new StoredField(URL_KEY, DECISIONS_PATH + calculateUrlForDecision(element, decision)));
+        doc.add(new StoredField(URL_KEY, calculateUrlPrefix(workspace) + DECISIONS_PATH + calculateUrlForDecision(element, decision)));
         doc.add(new TextField(WORKSPACE_KEY, toString(workspace.getId()), Field.Store.YES));
         doc.add(new TextField(TYPE_KEY, DocumentType.DECISION, Field.Store.YES));
 
@@ -348,6 +380,7 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
         doc.add(new StoredField(DESCRIPTION_KEY, decision.getStatus()));
         doc.add(new TextField(CONTENT_KEY, appendAll(decision.getTitle(), decision.getContent(), decision.getStatus()), Field.Store.NO));
         indexWriter.addDocument(doc);
+        indexWriter.commit();
     }
 
     protected String calculateUrlForSection(Element element, int sectionNumber) throws Exception {

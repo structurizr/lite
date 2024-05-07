@@ -132,6 +132,7 @@ public class StructurizrLite extends SpringBootServletInitializer {
 		log.info("");
 		log.info("Workspace path: " + Configuration.getInstance().getDataDirectory().getAbsolutePath());
 		log.info("Workspace filename: " + Configuration.getInstance().getWorkspaceFilename() + "[.dsl|.json]");
+		log.info("Workspaces: " + (Configuration.getInstance().isSingleWorkspace() ? "1" : "*"));
 		log.info("URL: " + Configuration.getInstance().getWebUrl());
 		log.info("Auto-save interval: " + Configuration.getInstance().getAutoSaveInterval() + "ms");
 		log.info("Auto-refresh interval: " + Configuration.getInstance().getAutoRefreshInterval() + "ms");

@@ -25,46 +25,6 @@ public class EmbedController extends AbstractController {
         // do nothing ... this page is supposed to be iframe'd
     }
 
-    @RequestMapping(value = "/workspace/embed")
-    public String embedDiagrams(
-            @RequestParam(value = "diagram", required = false) String diagramIdentifier,
-            @RequestParam(required = false) boolean diagramSelector,
-            @RequestParam(required = false, defaultValue = "") String iframe,
-            @RequestParam(required = false) String perspective,
-            ModelMap model) throws Exception {
-
-        diagramIdentifier = HtmlUtils.filterHtml(diagramIdentifier);
-        diagramIdentifier = HtmlUtils.escapeQuoteCharacters(diagramIdentifier);
-        iframe = HtmlUtils.filterHtml(iframe);
-        perspective = HtmlUtils.filterHtml(perspective);
-
-        if (diagramIdentifier != null && diagramIdentifier.length() > 0) {
-            model.addAttribute("diagramIdentifier", diagramIdentifier);
-        }
-
-        WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData();
-        workspaceMetaData.setEditable(false);
-
-        addCommonAttributes(model, "Structurizr Lite", false);
-        model.addAttribute("workspace", workspaceMetaData);
-
-        Workspace workspace = workspaceComponent.getWorkspace();
-        String json = WorkspaceUtils.toJson(workspace, false);
-        model.addAttribute("workspaceAsJson", JsonUtils.base64(json));
-
-        model.addAttribute("urlPrefix", "/workspace");
-        model.addAttribute("urlSuffix", "");
-
-        model.addAttribute("showToolbar", diagramSelector);
-        model.addAttribute("showDiagramSelector", diagramSelector);
-        model.addAttribute("embed", true);
-        model.addAttribute("iframe", iframe);
-        model.addAttribute("perspective", perspective);
-        model.addAttribute("publishThumbnails", true);
-
-        return "diagrams";
-    }
-
     @RequestMapping(value = "/embed", method = RequestMethod.GET)
     public String embedFromParent(@RequestParam(required = false, defaultValue = "0") long workspace,
                                   @RequestParam(required = false) String type,
@@ -83,7 +43,7 @@ public class EmbedController extends AbstractController {
         perspective = HtmlUtils.filterHtml(perspective);
         iframe = HtmlUtils.filterHtml(iframe);
 
-        WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData();
+        WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(workspace);
         workspaceMetaData.setName("Embedded workspace");
         workspaceMetaData.setEditable(editable);
 
@@ -93,7 +53,7 @@ public class EmbedController extends AbstractController {
         model.addAttribute("iframe", iframe);
         addCommonAttributes(model, "", false);
 
-        model.addAttribute("urlPrefix", "/workspace");
+        model.addAttribute("urlPrefix", calculateUrlPrefix(workspace));
 
         if (!StringUtils.isNullOrEmpty(perspective)) {
             if (StringUtils.isNullOrEmpty(urlSuffix)) {

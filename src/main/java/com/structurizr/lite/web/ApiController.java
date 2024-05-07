@@ -34,7 +34,7 @@ public class ApiController extends AbstractController {
         try {
             authoriseRequest("GET", getPath(request, workspaceId), null, request, response);
 
-            Workspace workspace = workspaceComponent.getWorkspace();
+            Workspace workspace = workspaceComponent.getWorkspace(workspaceId);
             if (workspace != null) {
                 return WorkspaceUtils.toJson(workspace, false);
             } else {
@@ -60,7 +60,9 @@ public class ApiController extends AbstractController {
         try {
             authoriseRequest("PUT", getPath(request, workspaceId), json, request, response);
 
-            workspaceComponent.putWorkspace(WorkspaceUtils.fromJson(json));
+            Workspace workspace = WorkspaceUtils.fromJson(json);
+            workspace.setId(workspaceId);
+            workspaceComponent.putWorkspace(workspace);
 
             return new ApiResponse("OK");
         } catch (Exception e) {

@@ -19,6 +19,7 @@ public class Configuration {
     private static final String STRUCTURIZR_CLOUD_SERVICE_API_URL = "https://api.structurizr.com";
     private static final String WORK_DIRECTORY_NAME = ".structurizr";
 
+    private static final String WORKSPACES_PROPERTY = "structurizr.workspaces";
     private static final String EDITABLE_PROPERTY = "structurizr.editable";
     private static final String URL_PROPERTY = "structurizr.url";
     private static final String AUTO_SAVE_INTERVAL_PROPERTY = "structurizr.autoSaveInterval";
@@ -30,6 +31,7 @@ public class Configuration {
     private static final String REMOTE_WORKSPACE_API_SECRET_PROPERTY = "structurizr.remote.apiSecret";
     private static final String REMOTE_WORKSPACE_PASSPHRASE_PROPERTY = "structurizr.remote.passphrase";
     private static final String REMOTE_WORKSPACE_ID_PROPERTY = "structurizr.remote.workspaceId";
+    private static final String SINGLE_WORKSPACE = "1";
 
     private File dataDirectory;
     private String webUrl;
@@ -117,6 +119,10 @@ public class Configuration {
 
     public String getWorkspaceFilename() {
         return getEnvironmentVariable(STRUCTURIZR_WORKSPACE_FILENAME, DEFAULT_WORKSPACE_FILENAME);
+    }
+
+    public boolean isSingleWorkspace() {
+        return getConfigurationParameter(WORKSPACES_PROPERTY, SINGLE_WORKSPACE).equals(SINGLE_WORKSPACE);
     }
 
     public File getWorkDirectory() {

@@ -57,18 +57,24 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
             Configuration.getInstance().getWorkDirectory().mkdirs();
         }
 
-        File dsl = new File(dataDirectory, filename + ".dsl");
-        File json = new File(dataDirectory, filename + ".json");
+        if (Configuration.getInstance().isSingleWorkspace()) {
+            File dsl = new File(getDataDirectory(1), filename + ".dsl");
+            File json = new File(getDataDirectory(1), filename + ".json");
 
-        if (!dsl.exists() && !json.exists()) {
-            createTemplate();
+            if (!dsl.exists() && !json.exists()) {
+                writeToFile(new File(dataDirectory, filename + ".dsl"), DSL_TEMPLATE);
+            }
         }
 
         lastModifiedDate = findLatestLastModifiedDate(dataDirectory);
     }
 
-    public void createTemplate() {
-        writeToFile(new File(dataDirectory, filename + ".dsl"), DSL_TEMPLATE);
+    private File getDataDirectory(long workspaceId) {
+        if (Configuration.getInstance().isSingleWorkspace()) {
+            return dataDirectory;
+        } else {
+            return new File(dataDirectory, "" + workspaceId);
+        }
     }
 
     private void writeToFile(File file, String content) {
@@ -81,29 +87,26 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
         }
     }
 
-    private Workspace loadWorkspace() {
-        File dsl = new File(dataDirectory, filename + ".dsl");
-        File json = new File(dataDirectory, filename + ".json");
+    private Workspace loadWorkspace(long workspaceId) {
+        File dslFile = new File(getDataDirectory(workspaceId), filename + ".dsl");
+        File jsonFile = new File(getDataDirectory(workspaceId), filename + ".json");
 
-        if (dsl.exists()) {
-            return loadWorkspaceFromDsl();
-        } else if (json.exists()) {
-            return loadWorkspaceFromJson();
+        if (dslFile.exists()) {
+            return loadWorkspaceFromDsl(workspaceId, dslFile, jsonFile);
+        } else if (jsonFile.exists()) {
+            return loadWorkspaceFromJson(workspaceId, jsonFile);
         } else {
-            throw new NoWorkspaceFoundException(filename);
+            throw new NoWorkspaceFoundException(filename, getDataDirectory(workspaceId));
         }
     }
 
-    private Workspace loadWorkspaceFromJson() {
+    private Workspace loadWorkspaceFromJson(long workspaceId, File jsonFile) {
         Workspace workspace = null;
 
         try {
-            File file = new File(dataDirectory, filename + ".json");
-            if (file.exists()) {
-                workspace = WorkspaceUtils.loadWorkspaceFromJson(file);
-                workspace.setId(1);
-                error = null;
-            }
+            workspace = WorkspaceUtils.loadWorkspaceFromJson(jsonFile);
+            workspace.setId(workspaceId);
+            error = null;
         } catch (Exception e) {
             workspace = null;
             error = filename + ".json: " + e.getMessage();
@@ -113,40 +116,37 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
         return workspace;
     }
 
-    private Workspace loadWorkspaceFromDsl() {
+    private Workspace loadWorkspaceFromDsl(long workspaceId, File dslFile, File jsonFile) {
         Workspace workspace = null;
 
         try {
-            File file = new File(dataDirectory, filename + ".dsl");
-            if (file.exists()) {
-                StructurizrDslParser parser = new StructurizrDslParser();
-                parser.parse(file);
-                workspace = parser.getWorkspace();
-                workspace.setId(1);
+            StructurizrDslParser parser = new StructurizrDslParser();
+            parser.parse(dslFile);
+            workspace = parser.getWorkspace();
+            workspace.setId(workspaceId);
 
-                // validate workspace scope
-                WorkspaceScopeValidatorFactory.getValidator(workspace).validate(workspace);
+            // validate workspace scope
+            WorkspaceScopeValidatorFactory.getValidator(workspace).validate(workspace);
 
-                if (!workspace.getModel().isEmpty() && workspace.getViews().isEmpty()) {
-                    workspace.getViews().createDefaultViews();
-                }
-
-                Workspace workspaceFromJson = loadWorkspaceFromJson();
-                if (workspaceFromJson != null) {
-                    workspace.getViews().copyLayoutInformationFrom(workspaceFromJson.getViews());
-                    workspace.getViews().getConfiguration().copyConfigurationFrom(workspaceFromJson.getViews().getConfiguration());
-                }
-
-                workspace.setLastModifiedDate(DateUtils.removeMilliseconds(DateUtils.getNow()));
-
-                try {
-                    putWorkspace(workspace);
-                } catch (Exception e) {
-                    log.warn(e);
-                }
-
-                error = null;
+            if (!workspace.getModel().isEmpty() && workspace.getViews().isEmpty()) {
+                workspace.getViews().createDefaultViews();
             }
+
+            Workspace workspaceFromJson = loadWorkspaceFromJson(workspaceId, jsonFile);
+            if (workspaceFromJson != null) {
+                workspace.getViews().copyLayoutInformationFrom(workspaceFromJson.getViews());
+                workspace.getViews().getConfiguration().copyConfigurationFrom(workspaceFromJson.getViews().getConfiguration());
+            }
+
+            workspace.setLastModifiedDate(DateUtils.removeMilliseconds(DateUtils.getNow()));
+
+            try {
+                putWorkspace(workspace);
+            } catch (Exception e) {
+                log.warn(e);
+            }
+
+            error = null;
         } catch (Exception e) {
             workspace = null;
             error = filename + ".dsl: " + e.getMessage();
@@ -156,16 +156,19 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
         return workspace;
     }
 
-    public Workspace getWorkspace() {
-        return loadWorkspace();
+    public Workspace getWorkspace(long workspaceId) {
+        Workspace workspace = loadWorkspace(workspaceId);
+        workspace.setId(workspaceId);
+
+        return workspace;
     }
 
     @Override
     public void putWorkspace(Workspace workspace) throws WorkspaceComponentException {
         try {
-            File file = new File(dataDirectory, filename + ".json");
+            File jsonFile = new File(getDataDirectory(workspace.getId()), filename + ".json");
             workspace.setLastModifiedDate(DateUtils.removeMilliseconds(DateUtils.getNow()));
-            WorkspaceUtils.saveWorkspaceToJson(workspace, file);
+            WorkspaceUtils.saveWorkspaceToJson(workspace, jsonFile);
 
             try {
                 searchComponent.index(workspace);
@@ -184,9 +187,9 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
     }
 
     @Override
-    public InputStreamAndContentLength getImage(String diagramKey) throws WorkspaceComponentException {
+    public InputStreamAndContentLength getImage(long workspaceId, String diagramKey) throws WorkspaceComponentException {
         try {
-            File imagesDirectory = getPathToWorkspaceImages();
+            File imagesDirectory = getPathToWorkspaceImages(workspaceId);
             File file = new File(imagesDirectory, diagramKey);
             if (file.exists()) {
                 return new InputStreamAndContentLength(new FileInputStream(file), file.length());
@@ -200,12 +203,12 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
     }
 
     @Override
-    public boolean putImage(String filename, String imageAsBase64DataUri) {
+    public boolean putImage(long workspaceId, String filename, String imageAsBase64DataUri) {
         String base64Image = imageAsBase64DataUri.split(",")[1];
         byte[] decodedImage = Base64.getDecoder().decode(base64Image.getBytes(StandardCharsets.UTF_8));
 
         try {
-            File imagesDirectory = getPathToWorkspaceImages();
+            File imagesDirectory = getPathToWorkspaceImages(workspaceId);
             File file = new File(imagesDirectory, filename);
             Files.write(file.toPath(), decodedImage);
 
@@ -216,8 +219,8 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
         }
     }
 
-    private File getPathToWorkspaceImages() {
-        File path = new File(Configuration.getInstance().getWorkDirectory(), "images");
+    private File getPathToWorkspaceImages(long workspaceId) {
+        File path = new File(new File(Configuration.getInstance().getWorkDirectory(), "" + workspaceId), "images");
         if (!path.exists()) {
             try {
                 Files.createDirectories(path.toPath());
@@ -259,7 +262,8 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
     private long findLatestLastModifiedDate(File directory) {
         long timestamp = 0;
 
-        File dsl = new File(dataDirectory, filename + ".dsl");
+        String dslFilename = filename + ".dsl";
+        String jsonFilename = filename + ".json";
 
         File[] files = directory.listFiles();
         if (files != null) {
@@ -267,8 +271,9 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
                 if (file.getName().startsWith(".") || file.getName().equals("structurizr.properties")) {
                     // ignore
                 } else if (file.isFile()) {
-                    if (file.getName().endsWith(".json") && dsl.exists()) {
+                    if (file.getName().equals(jsonFilename) && new File(file.getParentFile(), dslFilename).exists()) {
                         // ignore JSON file updates if the DSL is being used as the authoring method
+                        // e.g. ignore workspace.json if workspace.dsl exists in the same directory
                     } else {
                         timestamp = Math.max(timestamp, file.lastModified());
                     }

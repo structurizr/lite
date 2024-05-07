@@ -56,6 +56,14 @@ public abstract class AbstractController {
         }
     }
 
+    protected String calculateUrlPrefix(long workspaceId) {
+        if (Configuration.getInstance().isSingleWorkspace()) {
+            return "/workspace";
+        } else {
+            return "/workspace/" + workspaceId;
+        }
+    }
+
     protected String show404Page(ModelMap model) {
         addCommonAttributes(model, "Not found", true);
 
