@@ -3,9 +3,13 @@ package com.structurizr.lite.component.workspace;
 import com.structurizr.Workspace;
 import com.structurizr.lite.util.InputStreamAndContentLength;
 
+import java.util.List;
+
 public interface WorkspaceComponent {
 
     void start() throws Exception;
+
+    List<WorkspaceMetaData> getWorkspaces();
 
     Workspace getWorkspace(long workspaceId);
 

@@ -1,6 +1,7 @@
 package com.structurizr.lite.component.workspace;
 
 import com.structurizr.Workspace;
+import com.structurizr.api.WorkspaceMetadata;
 import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.lite.Configuration;
 import com.structurizr.lite.component.search.SearchComponent;
@@ -20,12 +21,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Base64;
+import java.util.*;
 
 @Component
 class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
 
-    private static Log log = LogFactory.getLog(FileSystemWorkspaceComponentImpl.class);
+    private static final Log log = LogFactory.getLog(FileSystemWorkspaceComponentImpl.class);
 
     private File dataDirectory;
     private String filename;
@@ -34,7 +35,9 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
 
     private long lastModifiedDate = 0;
 
-    private SearchComponent searchComponent;
+    private final SearchComponent searchComponent;
+
+    private final Map<Long, WorkspaceMetaData> workspaces = new TreeMap<>();
 
     FileSystemWorkspaceComponentImpl(SearchComponent searchComponent) {
         this.searchComponent = searchComponent;
@@ -64,9 +67,30 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
             if (!dsl.exists() && !json.exists()) {
                 writeToFile(new File(dataDirectory, filename + ".dsl"), DSL_TEMPLATE);
             }
+
+            workspaces.put(1L, toWorkspaceMetadata(loadWorkspace(1)));
+        } else {
+            File[] files = dataDirectory.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file != null && file.isDirectory() && file.getName().matches("\\d*")) {
+                        long id = Long.parseLong(file.getName());
+                        workspaces.put(id, toWorkspaceMetadata(loadWorkspace(id)));
+                    }
+                }
+            }
         }
 
         lastModifiedDate = findLatestLastModifiedDate(dataDirectory);
+    }
+
+    private WorkspaceMetaData toWorkspaceMetadata(Workspace workspace) {
+        WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(workspace.getId());
+        workspaceMetaData.setName(workspace.getName());
+        workspaceMetaData.setDescription(workspace.getDescription());
+        workspaceMetaData.setLastModifiedDate(workspace.getLastModifiedDate());
+
+        return workspaceMetaData;
     }
 
     private File getDataDirectory(long workspaceId) {
@@ -91,13 +115,18 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
         File dslFile = new File(getDataDirectory(workspaceId), filename + ".dsl");
         File jsonFile = new File(getDataDirectory(workspaceId), filename + ".json");
 
+        Workspace workspace = null;
         if (dslFile.exists()) {
-            return loadWorkspaceFromDsl(workspaceId, dslFile, jsonFile);
+            workspace = loadWorkspaceFromDsl(workspaceId, dslFile, jsonFile);
         } else if (jsonFile.exists()) {
-            return loadWorkspaceFromJson(workspaceId, jsonFile);
-        } else {
+            workspace = loadWorkspaceFromJson(workspaceId, jsonFile);
+        }
+
+        if (workspace == null) {
             throw new NoWorkspaceFoundException(filename, getDataDirectory(workspaceId));
         }
+
+        return workspace;
     }
 
     private Workspace loadWorkspaceFromJson(long workspaceId, File jsonFile) {
@@ -154,6 +183,10 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
         }
 
         return workspace;
+    }
+
+    public List<WorkspaceMetaData> getWorkspaces() {
+        return new ArrayList<>(workspaces.values());
     }
 
     public Workspace getWorkspace(long workspaceId) {
