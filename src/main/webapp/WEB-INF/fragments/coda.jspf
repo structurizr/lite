@@ -3,7 +3,7 @@
     <c:if test="${showFooter eq true}">
     <div id="footer">
         <p>
-            <a href="https://structurizr.com/help/lite" target="_blank">Structurizr Lite</a>
+            <a href="https://docs.structurizr.com/lite" target="_blank">Structurizr Lite</a>
             |
             <span id="buildNumber">Build ${version.buildNumber}</span> <!-- <fmt:formatDate value="${version.buildTimestamp}" pattern="EEE dd MMM yyyy HH:mm z" /> -->
             |
