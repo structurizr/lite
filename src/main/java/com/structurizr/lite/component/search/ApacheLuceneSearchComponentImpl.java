@@ -68,6 +68,8 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
     }
 
     private void start() {
+        FileSystemUtils.deleteRecursively(indexDirectory);
+
         if (!indexDirectory.exists()) {
             try {
                 Files.createDirectory(indexDirectory.toPath());
