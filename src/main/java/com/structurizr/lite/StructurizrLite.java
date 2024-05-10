@@ -155,25 +155,27 @@ public class StructurizrLite extends SpringBootServletInitializer {
 		}
 		log.info("Graphviz (dot): " + Configuration.getInstance().isGraphvizEnabled());
 
-		try {
-			long workspaceId = Configuration.getInstance().getRemoteWorkspaceId();
-			if (workspaceId > 0) {
-				log.info("");
-				log.info("Pulling workspace from " + Configuration.getInstance().getRemoteApiUrl() + " with ID " + workspaceId);
+		if (Configuration.getInstance().isSingleWorkspace()) {
+			try {
+				long workspaceId = Configuration.getInstance().getRemoteWorkspaceId();
+				if (workspaceId > 0) {
+					log.info("");
+					log.info("Pulling workspace from " + Configuration.getInstance().getRemoteApiUrl() + " with ID " + workspaceId);
 
-				Workspace workspace = createWorkspaceApiClient().getWorkspace(workspaceId);
+					Workspace workspace = createWorkspaceApiClient().getWorkspace(workspaceId);
 
-				File jsonFile = new File(Configuration.getInstance().getDataDirectory(), Configuration.getInstance().getWorkspaceFilename() + ".json");
-				if (workspace.getLastModifiedDate().getTime() > jsonFile.lastModified()) {
-					WorkspaceUtils.saveWorkspaceToJson(workspace, jsonFile);
-				} else {
-					log.info("Skipping - local " + Configuration.getInstance().getWorkspaceFilename() + ".json file is newer");
+					File jsonFile = new File(Configuration.getInstance().getDataDirectory(), Configuration.getInstance().getWorkspaceFilename() + ".json");
+					if (workspace.getLastModifiedDate().getTime() > jsonFile.lastModified()) {
+						WorkspaceUtils.saveWorkspaceToJson(workspace, jsonFile);
+					} else {
+						log.info("Skipping - local " + Configuration.getInstance().getWorkspaceFilename() + ".json file is newer");
+					}
 				}
+			} catch (Exception e) {
+				log.error(e);
 			}
-		} catch (Exception e) {
-			log.error(e);
 		}
-
+		
 		log.info("***********************************************************************************");
 		log.info("MIT License");
 		log.info("");
@@ -206,18 +208,20 @@ public class StructurizrLite extends SpringBootServletInitializer {
 		log.info("********************************************************");
 		log.info(" Stopping Structurizr Lite");
 
-		try {
-			long workspaceId = Configuration.getInstance().getRemoteWorkspaceId();
-			if (workspaceId > 0) {
-				log.info("");
-				log.info("Pushing workspace to " + Configuration.getInstance().getRemoteApiUrl() + " with ID " + workspaceId);
+		if (Configuration.getInstance().isSingleWorkspace()) {
+			try {
+				long workspaceId = Configuration.getInstance().getRemoteWorkspaceId();
+				if (workspaceId > 0) {
+					log.info("");
+					log.info("Pushing workspace to " + Configuration.getInstance().getRemoteApiUrl() + " with ID " + workspaceId);
 
-				Workspace workspace = WorkspaceUtils.loadWorkspaceFromJson(new File(Configuration.getInstance().getDataDirectory(), Configuration.getInstance().getWorkspaceFilename() + ".json"));
-				workspace.setRevision(null);
-				createWorkspaceApiClient().putWorkspace(workspaceId, workspace);
+					Workspace workspace = WorkspaceUtils.loadWorkspaceFromJson(new File(Configuration.getInstance().getDataDirectory(), Configuration.getInstance().getWorkspaceFilename() + ".json"));
+					workspace.setRevision(null);
+					createWorkspaceApiClient().putWorkspace(workspaceId, workspace);
+				}
+			} catch (Exception e) {
+				log.error(e);
 			}
-		} catch (Exception e) {
-			log.error(e);
 		}
 
 		log.info("********************************************************");
