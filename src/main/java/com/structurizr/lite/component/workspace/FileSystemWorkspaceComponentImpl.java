@@ -132,14 +132,16 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
     private Workspace loadWorkspaceFromJson(long workspaceId, File jsonFile) {
         Workspace workspace = null;
 
-        try {
-            workspace = WorkspaceUtils.loadWorkspaceFromJson(jsonFile);
-            workspace.setId(workspaceId);
-            error = null;
-        } catch (Exception e) {
-            workspace = null;
-            error = filename + ".json: " + e.getMessage();
-            log.error(e);
+        if (jsonFile.exists()) {
+            try {
+                workspace = WorkspaceUtils.loadWorkspaceFromJson(jsonFile);
+                workspace.setId(workspaceId);
+                error = null;
+            } catch (Exception e) {
+                workspace = null;
+                error = filename + ".json: " + e.getMessage();
+                log.error(e);
+            }
         }
 
         return workspace;

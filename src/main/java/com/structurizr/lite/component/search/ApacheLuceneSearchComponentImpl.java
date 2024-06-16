@@ -124,7 +124,6 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
             doc.add(new StoredField(DESCRIPTION_KEY, workspace.getDescription()));
             doc.add(new TextField(CONTENT_KEY, appendAll(workspace.getName(), workspace.getDescription()), Field.Store.NO));
             indexWriter.addDocument(doc);
-            indexWriter.commit();
 
             for (CustomView view : workspace.getViews().getCustomViews()) {
                 index(workspace, view, indexWriter);
@@ -160,6 +159,8 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
                     }
                 }
             }
+
+            indexWriter.commit();
         } catch (Exception e) {
             log.error(e);
         }
@@ -243,7 +244,6 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
         doc.add(new TextField(CONTENT_KEY, content.toString(), Field.Store.NO));
 
         indexWriter.addDocument(doc);
-        indexWriter.commit();
     }
 
     private String indexElementBasics(Element element) {
@@ -363,7 +363,6 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
         doc.add(new StoredField(DESCRIPTION_KEY, ""));
         doc.add(new TextField(CONTENT_KEY, appendAll(title, content.toString()), Field.Store.NO));
         indexWriter.addDocument(doc);
-        indexWriter.commit();
     }
 
     private void indexDecision(Workspace workspace, Element element, Decision decision, IndexWriter indexWriter) throws Exception {
@@ -382,7 +381,6 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
         doc.add(new StoredField(DESCRIPTION_KEY, decision.getStatus()));
         doc.add(new TextField(CONTENT_KEY, appendAll(decision.getTitle(), decision.getContent(), decision.getStatus()), Field.Store.NO));
         indexWriter.addDocument(doc);
-        indexWriter.commit();
     }
 
     protected String calculateUrlForSection(Element element, int sectionNumber) throws Exception {
