@@ -62,7 +62,6 @@
                 <span class="topNavigationItem"><a href="/workspace/decisions">Decisions</a></span>
                 <span class="topNavigationItem"><a href="/workspace/explore">Explore</a></span>
                 </c:if>
-                <span class="topNavigationItem"><a href="https://structurizr.com/help" target="_blank">Help</a></span>
             </div>
         </div>
     </div>

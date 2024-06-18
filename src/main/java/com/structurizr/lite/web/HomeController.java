@@ -46,7 +46,7 @@ public class HomeController extends AbstractController {
             model.addAttribute("workspaces", workspaces);
             model.addAttribute("numberOfWorkspaces", workspaces.size());
 
-            model.addAttribute("workspaces", workspaces);
+            model.addAttribute("sort", sort);
             addCommonAttributes(model, "Structurizr Lite", true);
 
             return "home";

@@ -3,13 +3,11 @@
     <c:if test="${showFooter eq true}">
     <div id="footer">
         <p>
-            <a href="https://docs.structurizr.com/lite" target="_blank">Structurizr Lite</a>
+            Structurizr Lite
             |
             <span id="buildNumber">Build ${version.buildNumber}</span> <!-- <fmt:formatDate value="${version.buildTimestamp}" pattern="EEE dd MMM yyyy HH:mm z" /> -->
             |
             <a href="https://docs.structurizr.com/lite" target="_blank">Documentation</a>
-            |
-            <a href="https://structurizr.com/help/support" target="_blank">Help and Support</a>
         </p>
     </div>
     </c:if>
