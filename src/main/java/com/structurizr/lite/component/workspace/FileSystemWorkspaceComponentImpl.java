@@ -1,8 +1,8 @@
 package com.structurizr.lite.component.workspace;
 
 import com.structurizr.Workspace;
-import com.structurizr.api.WorkspaceMetadata;
 import com.structurizr.dsl.StructurizrDslParser;
+import com.structurizr.dsl.StructurizrDslParserException;
 import com.structurizr.lite.Configuration;
 import com.structurizr.lite.component.search.SearchComponent;
 import com.structurizr.lite.util.DateUtils;
@@ -137,6 +137,8 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
                 workspace = WorkspaceUtils.loadWorkspaceFromJson(jsonFile);
                 workspace.setId(workspaceId);
                 error = null;
+            } catch (StructurizrDslParserException e) {
+                throw new WorkspaceParsingException(e.getMessage());
             } catch (Exception e) {
                 workspace = null;
                 error = filename + ".json: " + e.getMessage();
@@ -178,6 +180,8 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
             }
 
             error = null;
+        } catch (StructurizrDslParserException e) {
+            throw new WorkspaceParsingException(e.getMessage());
         } catch (Exception e) {
             workspace = null;
             error = filename + ".dsl: " + e.getMessage();
