@@ -38,8 +38,10 @@ public class HomeController extends AbstractController {
             @RequestParam(required = false, defaultValue = DEFAULT_PAGE_NUMBER) int pageNumber,
             @RequestParam(required = false, defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
             ModelMap model) {
-        List<WorkspaceMetaData> workspaces = workspaceComponent.getWorkspaces();
-        if (workspaceComponent.getWorkspaces().size() > 1) {
+        if (Configuration.getInstance().isSingleWorkspace()) {
+            return showWorkspace(1, model);
+        } else {
+            List<WorkspaceMetaData> workspaces = workspaceComponent.getWorkspaces();
             sort = determineSort(sort);
             workspaces = sortAndPaginate(new ArrayList<>(workspaces), sort, pageNumber, pageSize, model);
 
@@ -50,8 +52,6 @@ public class HomeController extends AbstractController {
             addCommonAttributes(model, "Structurizr Lite", true);
 
             return "home";
-        } else {
-            return showWorkspace(workspaces.get(0).getId(), model);
         }
     }
 

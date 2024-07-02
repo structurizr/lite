@@ -1,7 +1,6 @@
 package com.structurizr.lite.component.workspace;
 
 import com.structurizr.Workspace;
-import com.structurizr.api.WorkspaceMetadata;
 import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.lite.Configuration;
 import com.structurizr.lite.component.search.SearchComponent;
@@ -21,7 +20,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 
 @Component
 class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
@@ -37,11 +38,13 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
 
     private final SearchComponent searchComponent;
 
-    private final Map<Long, WorkspaceMetaData> workspaces = new TreeMap<>();
-
     FileSystemWorkspaceComponentImpl(SearchComponent searchComponent) {
         this.searchComponent = searchComponent;
-        start();
+        try {
+            start();
+        } catch (Exception e) {
+            log.error("Error while starting Structurizr Lite", e);
+        }
     }
 
     public void start() {
@@ -66,18 +69,6 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
 
             if (!dsl.exists() && !json.exists()) {
                 writeToFile(new File(dataDirectory, filename + ".dsl"), DSL_TEMPLATE);
-            }
-
-            workspaces.put(1L, toWorkspaceMetadata(loadWorkspace(1)));
-        } else {
-            File[] files = dataDirectory.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    if (file != null && file.isDirectory() && file.getName().matches("\\d*")) {
-                        long id = Long.parseLong(file.getName());
-                        workspaces.put(id, toWorkspaceMetadata(loadWorkspace(id)));
-                    }
-                }
             }
         }
 
@@ -120,9 +111,7 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
             workspace = loadWorkspaceFromDsl(workspaceId, dslFile, jsonFile);
         } else if (jsonFile.exists()) {
             workspace = loadWorkspaceFromJson(workspaceId, jsonFile);
-        }
-
-        if (workspace == null) {
+        } else {
             throw new NoWorkspaceFoundException(filename, getDataDirectory(workspaceId));
         }
 
@@ -188,12 +177,32 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
     }
 
     public List<WorkspaceMetaData> getWorkspaces() {
-        return new ArrayList<>(workspaces.values());
+        List<WorkspaceMetaData> workspaces = new ArrayList<>();
+
+        File[] files = dataDirectory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file != null && file.isDirectory() && file.getName().matches("\\d*")) {
+                    long id = Long.parseLong(file.getName());
+                    Workspace workspace = loadWorkspace(id);
+                    if (workspace == null) {
+                        workspace = new Workspace("Workspace " + id, "");
+                        workspace.setId(id);
+                    }
+                    workspaces.add(toWorkspaceMetadata(workspace));
+                }
+            }
+        }
+
+        return workspaces;
     }
 
     public Workspace getWorkspace(long workspaceId) {
         Workspace workspace = loadWorkspace(workspaceId);
-        workspace.setId(workspaceId);
+
+        if (workspace != null) {
+            workspace.setId(workspaceId);
+        }
 
         return workspace;
     }
