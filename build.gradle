@@ -74,3 +74,7 @@ configurations {
 	integrationTestImplementation.extendsFrom testImplementation
 	integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
+
+configurations.all {
+	exclude group: "commons-logging", module: "commons-logging"
+}
