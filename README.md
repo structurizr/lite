@@ -32,8 +32,7 @@ cd structurizr-lite
 And to run Structurizr Lite (this has only been tested with Java 17):
 
 ```
-java -Djdk.util.jar.enableMultiRelease=false -jar build/libs/structurizr-lite.war /path/to/workspace
+java -jar build/libs/structurizr-lite.war /path/to/workspace
 ```
 
 - Replace `/path/to/workspace` with the path to the folder where your `workspace.dsl` file is.
-- See https://github.com/spring-projects/spring-boot/issues/33633 for details of why `-Djdk.util.jar.enableMultiRelease=false` is required.
