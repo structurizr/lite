@@ -23,19 +23,17 @@
     </c:if>
     <link href="${structurizrConfiguration.cdnUrl}/css/structurizr-print.css" rel="stylesheet" media="print" />
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" />
-    <c:choose>
-    <c:when test="${not empty cookie['structurizr.dark'] && cookie['structurizr.dark'].value eq 'false'}">
-    </c:when>
-    <c:otherwise>
-    <link href="${structurizrConfiguration.cdnUrl}/css/structurizr-dark.css" rel="stylesheet" media="screen" />
-    </c:otherwise>
-    </c:choose>
 
     <script src="${structurizrConfiguration.cdnUrl}/js/jquery-3.6.3.min.js"></script>
     <script src="${structurizrConfiguration.cdnUrl}/js/bootstrap-3.3.7.min.js"></script>
     <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr${structurizrConfiguration.versionSuffix}.js"></script>
+    <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr-ui${structurizrConfiguration.versionSuffix}.js"></script>
     <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr-util${structurizrConfiguration.versionSuffix}.js"></script>
 </head>
+
+<script nonce="${scriptNonce}">
+    structurizr.ui.initDarkMode('${structurizrConfiguration.cdnUrl}/css/structurizr-dark.css');
+</script>
 
 <body>
 
