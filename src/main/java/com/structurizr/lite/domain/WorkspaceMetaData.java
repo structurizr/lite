@@ -1,12 +1,10 @@
-package com.structurizr.lite.component.workspace;
-
-import com.structurizr.lite.domain.UserType;
+package com.structurizr.lite.domain;
 
 import java.util.Date;
 
 public class WorkspaceMetaData {
 
-    private long workspaceId;
+    private final long workspaceId;
     private String name;
     private String description;
     private String version;
@@ -16,7 +14,6 @@ public class WorkspaceMetaData {
     private Date lastModifiedDate;
     private String lastModifiedUser;
     private String lastModifiedAgent;
-    private String internalVersion;
 
     private long size;
     private long revision = 0;
@@ -169,12 +166,12 @@ public class WorkspaceMetaData {
         this.owner = owner;
     }
 
-    public String getInternalVersion() {
-        return internalVersion;
+    public String getBranch() {
+        return "";
     }
 
-    public void setInternalVersion(String internalVersion) {
-        this.internalVersion = internalVersion;
+    public String getInternalVersion() {
+        return "";
     }
 
     public boolean isActive() {

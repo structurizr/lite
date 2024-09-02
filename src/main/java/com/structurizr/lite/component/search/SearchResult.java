@@ -1,6 +1,6 @@
 package com.structurizr.lite.component.search;
 
-import com.structurizr.lite.component.workspace.WorkspaceMetaData;
+import com.structurizr.lite.domain.WorkspaceMetaData;
 
 public final class SearchResult {
 

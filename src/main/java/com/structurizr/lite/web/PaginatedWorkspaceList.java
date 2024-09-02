@@ -1,6 +1,6 @@
 package com.structurizr.lite.web;
 
-import com.structurizr.lite.component.workspace.WorkspaceMetaData;
+import com.structurizr.lite.domain.WorkspaceMetaData;
 
 import java.util.List;
 

@@ -2,7 +2,7 @@ package com.structurizr.lite.web;
 
 import com.structurizr.Workspace;
 import com.structurizr.lite.Configuration;
-import com.structurizr.lite.component.workspace.WorkspaceMetaData;
+import com.structurizr.lite.domain.WorkspaceMetaData;
 import com.structurizr.lite.util.HtmlUtils;
 import com.structurizr.model.Component;
 import com.structurizr.model.Container;

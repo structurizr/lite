@@ -4,6 +4,7 @@ import com.structurizr.Workspace;
 import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.lite.Configuration;
 import com.structurizr.lite.component.search.SearchComponent;
+import com.structurizr.lite.domain.WorkspaceMetaData;
 import com.structurizr.lite.util.DateUtils;
 import com.structurizr.lite.util.InputStreamAndContentLength;
 import com.structurizr.util.WorkspaceUtils;

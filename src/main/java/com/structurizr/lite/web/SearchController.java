@@ -2,7 +2,7 @@ package com.structurizr.lite.web;
 
 import com.structurizr.lite.component.search.SearchComponent;
 import com.structurizr.lite.component.search.SearchResult;
-import com.structurizr.lite.component.workspace.WorkspaceMetaData;
+import com.structurizr.lite.domain.WorkspaceMetaData;
 import com.structurizr.lite.util.HtmlUtils;
 import com.structurizr.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class SearchController extends AbstractController {

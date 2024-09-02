@@ -6,7 +6,7 @@ import com.structurizr.inspection.Inspector;
 import com.structurizr.inspection.Severity;
 import com.structurizr.inspection.Violation;
 import com.structurizr.lite.Configuration;
-import com.structurizr.lite.component.workspace.WorkspaceMetaData;
+import com.structurizr.lite.domain.WorkspaceMetaData;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
