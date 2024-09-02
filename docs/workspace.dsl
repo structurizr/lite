@@ -19,15 +19,18 @@ workspace "Structurizr Lite" {
                     classes "${STRUCTURIZR_LITE_HOME}/build/libs/structurizr-lite-plain.jar"
                     source "${STRUCTURIZR_LITE_HOME}/src/main/java"
                     strategy {
-                        matcher nameSuffix "Component" "Java Component"
+                        technology "Java Component"
+                        matcher nameSuffix "Component"
                         supportingTypes inpackage
                     }
                     strategy {
-                        matcher annotation "org.springframework.stereotype.Controller" "Spring MVC Controller"
+                        technology "Spring MVC Controller"
+                        matcher annotation "org.springframework.stereotype.Controller"
                         filter excludeRegex ".*AbstractController|.*.Http[0-9]*Controller"
                     }
                     strategy {
-                        matcher annotation "org.springframework.web.bind.annotation.RestController" "Spring MVC REST Controller"
+                        technology "Spring MVC REST Controller"
+                        matcher annotation "org.springframework.web.bind.annotation.RestController"
                         filter excludeRegex ".*HealthCheckController"
                     }
                 }
