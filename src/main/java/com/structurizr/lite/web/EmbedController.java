@@ -29,7 +29,6 @@ public class EmbedController extends AbstractController {
                                   @RequestParam(required = false, defaultValue = "") String iframe,
                                   @RequestParam(required = false, defaultValue = "true") boolean fullscreen,
                                   @RequestParam(required = false) String urlPrefix,
-                                  @RequestParam(required = false) String urlSuffix,
                                   ModelMap model) {
 
         type = HtmlUtils.filterHtml(type);
@@ -49,15 +48,6 @@ public class EmbedController extends AbstractController {
         addCommonAttributes(model, "", false);
 
         model.addAttribute("urlPrefix", calculateUrlPrefix(workspace));
-
-        if (!StringUtils.isNullOrEmpty(perspective)) {
-            if (StringUtils.isNullOrEmpty(urlSuffix)) {
-                urlSuffix = "?perspective=" + perspective;
-            } else {
-                urlSuffix = urlSuffix + "&perspective=" + perspective;
-            }
-        }
-        model.addAttribute("urlSuffix", urlSuffix);
 
         if ("graph".equals(type)) {
             model.addAttribute("view", view);
