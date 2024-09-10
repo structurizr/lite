@@ -216,7 +216,6 @@ public class StructurizrLite extends SpringBootServletInitializer {
 					log.info("Pushing workspace to " + Configuration.getInstance().getRemoteApiUrl() + " with ID " + workspaceId);
 
 					Workspace workspace = WorkspaceUtils.loadWorkspaceFromJson(new File(Configuration.getInstance().getDataDirectory(), Configuration.getInstance().getWorkspaceFilename() + ".json"));
-					workspace.setRevision(null);
 					createWorkspaceApiClient().putWorkspace(workspaceId, workspace);
 				}
 			} catch (Exception e) {

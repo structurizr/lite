@@ -16,7 +16,6 @@ public class WorkspaceMetaData {
     private String lastModifiedAgent;
 
     private long size;
-    private long revision = 0;
 
     private boolean editable = false;
 
@@ -116,14 +115,6 @@ public class WorkspaceMetaData {
 
     public void setSize(long size) {
         this.size = size;
-    }
-
-    public long getRevision() {
-        return revision;
-    }
-
-    public void setRevision(long revision) {
-        this.revision = revision;
     }
 
     public boolean isEditable() {
