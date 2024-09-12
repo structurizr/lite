@@ -6,6 +6,7 @@ import com.structurizr.lite.Configuration;
 import com.structurizr.lite.component.search.SearchComponent;
 import com.structurizr.lite.domain.WorkspaceMetaData;
 import com.structurizr.lite.util.DateUtils;
+import com.structurizr.lite.util.DslTemplate;
 import com.structurizr.lite.util.InputStreamAndContentLength;
 import com.structurizr.util.WorkspaceUtils;
 import com.structurizr.validation.WorkspaceScopeValidatorFactory;
@@ -69,7 +70,7 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
             File json = new File(getDataDirectory(1), filename + ".json");
 
             if (!dsl.exists() && !json.exists()) {
-                writeToFile(new File(dataDirectory, filename + ".dsl"), DSL_TEMPLATE);
+                writeToFile(new File(dataDirectory, filename + ".dsl"), DslTemplate.generate());
             }
         }
 
@@ -276,28 +277,6 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
 
         return path;
     }
-
-    private static final String DSL_TEMPLATE = """
-            workspace {
-                        
-                model {
-                    user = person "User"
-                    softwareSystem = softwareSystem "Software System"
-                        
-                    user -> softwareSystem "Uses"
-                }
-                        
-                views {
-                    systemContext softwareSystem "Diagram1" {
-                        include *
-                    }
-                }
-                        
-                configuration {
-                    scope softwaresystem
-                }
-                        
-            }""";
 
     @Scheduled(fixedDelayString = "#{@applicationPropertyService.getAutoRefreshInterval()}")
     public void checkForUpdatedFiles() {
