@@ -45,3 +45,6 @@ cp $STRUCTURIZR_UI_DIR/src/jsp/* $STRUCTURIZR_LITE_DIR/src/main/webapp/WEB-INF/j
 rm $STRUCTURIZR_LITE_DIR/src/main/webapp/WEB-INF/jsp/review.jsp
 rm $STRUCTURIZR_LITE_DIR/src/main/webapp/WEB-INF/jsp/review-create.jsp
 
+# Java
+mkdir $STRUCTURIZR_LITE_DIR/src/main/java/com/structurizr/util/
+cp $STRUCTURIZR_UI_DIR/src/java/com/structurizr/util/DslTemplate.java $STRUCTURIZR_LITE_DIR/src/main/java/com/structurizr/util/

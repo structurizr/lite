@@ -6,8 +6,8 @@ import com.structurizr.lite.Configuration;
 import com.structurizr.lite.component.search.SearchComponent;
 import com.structurizr.lite.domain.WorkspaceMetaData;
 import com.structurizr.lite.util.DateUtils;
-import com.structurizr.lite.util.DslTemplate;
 import com.structurizr.lite.util.InputStreamAndContentLength;
+import com.structurizr.util.DslTemplate;
 import com.structurizr.util.WorkspaceUtils;
 import com.structurizr.validation.WorkspaceScopeValidatorFactory;
 import org.apache.commons.logging.Log;
@@ -70,7 +70,7 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
             File json = new File(getDataDirectory(1), filename + ".json");
 
             if (!dsl.exists() && !json.exists()) {
-                writeToFile(new File(dataDirectory, filename + ".dsl"), DslTemplate.generate());
+                writeToFile(new File(dataDirectory, filename + ".dsl"), DslTemplate.generate("Name", "Description"));
             }
         }
 
