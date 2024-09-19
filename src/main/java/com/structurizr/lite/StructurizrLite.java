@@ -2,10 +2,9 @@ package com.structurizr.lite;
 
 import com.structurizr.Workspace;
 import com.structurizr.api.WorkspaceApiClient;
+import com.structurizr.autolayout.graphviz.GraphvizAutomaticLayout;
 import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.encryption.AesEncryptionStrategy;
-import com.structurizr.autolayout.graphviz.GraphvizAutomaticLayout;
-import com.structurizr.importer.documentation.DefaultDocumentationImporter;
 import com.structurizr.lite.util.DateUtils;
 import com.structurizr.lite.util.Version;
 import com.structurizr.util.StringUtils;
