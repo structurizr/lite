@@ -18,6 +18,9 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.Arrays;
 
+/**
+ * Provides server-side automatic layout facilities for diagrams.
+ */
 @RestController
 public class GraphvizController {
 

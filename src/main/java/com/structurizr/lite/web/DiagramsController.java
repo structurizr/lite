@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Provides access to the diagrams defined within a workspace.
+ */
 @Controller
 public class DiagramsController extends AbstractController {
 

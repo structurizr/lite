@@ -160,7 +160,12 @@ public class StructurizrLite extends SpringBootServletInitializer {
 				long workspaceId = Configuration.getInstance().getRemoteWorkspaceId();
 				if (workspaceId > 0) {
 					log.info("");
-					log.info("Pulling workspace from " + Configuration.getInstance().getRemoteApiUrl() + " with ID " + workspaceId);
+
+					String branch = "";
+					if (!StringUtils.isNullOrEmpty(Configuration.getInstance().getRemoteBranch())) {
+						branch = " (branch=" + Configuration.getInstance().getRemoteBranch() + ")";
+					}
+					log.info("Pulling workspace from " + Configuration.getInstance().getRemoteApiUrl() + branch + " with ID " + workspaceId);
 
 					Workspace workspace = createWorkspaceApiClient().getWorkspace(workspaceId);
 
@@ -213,7 +218,12 @@ public class StructurizrLite extends SpringBootServletInitializer {
 				long workspaceId = Configuration.getInstance().getRemoteWorkspaceId();
 				if (workspaceId > 0) {
 					log.info("");
-					log.info("Pushing workspace to " + Configuration.getInstance().getRemoteApiUrl() + " with ID " + workspaceId);
+
+					String branch = "";
+					if (!StringUtils.isNullOrEmpty(Configuration.getInstance().getRemoteBranch())) {
+						branch = " (branch=" + Configuration.getInstance().getRemoteBranch() + ")";
+					}
+					log.info("Pushing workspace to " + Configuration.getInstance().getRemoteApiUrl() + branch + " with ID " + workspaceId);
 
 					Workspace workspace = WorkspaceUtils.loadWorkspaceFromJson(new File(Configuration.getInstance().getDataDirectory(), Configuration.getInstance().getWorkspaceFilename() + ".json"));
 					createWorkspaceApiClient().putWorkspace(workspaceId, workspace);
@@ -232,10 +242,12 @@ public class StructurizrLite extends SpringBootServletInitializer {
 		String apiKey = Configuration.getInstance().getRemoteApiKey();
 		String apiSecret = Configuration.getInstance().getRemoteApiSecret();
 		String passphrase = Configuration.getInstance().getRemotePassphrase();
+		String branch = Configuration.getInstance().getRemoteBranch();
 
 		WorkspaceApiClient client = new WorkspaceApiClient(apiUrl, apiKey, apiSecret);
 		client.setAgent("structurizr-lite/" + new Version().getBuildNumber());
 		client.setUser(System.getenv(STRUCTURIZR_USERNAME));
+		client.setBranch(branch);
 		if (!StringUtils.isNullOrEmpty(passphrase)) {
 			client.setEncryptionStrategy(new AesEncryptionStrategy(passphrase));
 		}

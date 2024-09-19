@@ -17,8 +17,8 @@ import java.io.StringReader;
 import java.util.Base64;
 
 /**
- * A simple implementation of the Structurizr web API, consisting of two operations to
- * get and put JSON workspace definitions:
+ * An implementation of the Structurizr web API, consisting of two operations to
+ * get and put JSON workspace definitions.
  *
  *  - GET /api/workspace/{id}
  *  - PUT /api/workspace/{id}

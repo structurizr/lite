@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+/**
+ * Provides access to architecture decision records (ADRs) defined within a workspace.
+ */
 @Controller
 public class DecisionsController extends AbstractController {
 

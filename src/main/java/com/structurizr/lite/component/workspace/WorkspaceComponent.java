@@ -6,6 +6,9 @@ import com.structurizr.lite.util.InputStreamAndContentLength;
 
 import java.util.List;
 
+/**
+ * Provides access to workspace data stored on the file system.
+ */
 public interface WorkspaceComponent {
 
     void start() throws Exception;

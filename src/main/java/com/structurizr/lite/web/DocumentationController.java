@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+/**
+ * Provides access to Markdown/AsciiDoc documentation defined within a workspace.
+ */
 @Controller
 public class DocumentationController extends AbstractController {
 

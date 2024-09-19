@@ -27,10 +27,12 @@ public class Configuration {
     private static final String AUTO_REFRESH_INTERVAL_PROPERTY = "structurizr.autoRefreshInterval";
     private static final String DEFAULT_AUTO_REFRESH_INTERVAL_IN_MILLISECONDS = "0";
 
+    private static final String REMOTE_WORKSPACE_API_URL_PROPERTY = "structurizr.remote.apiUrl";
     private static final String REMOTE_WORKSPACE_API_KEY_PROPERTY = "structurizr.remote.apiKey";
     private static final String REMOTE_WORKSPACE_API_SECRET_PROPERTY = "structurizr.remote.apiSecret";
     private static final String REMOTE_WORKSPACE_PASSPHRASE_PROPERTY = "structurizr.remote.passphrase";
     private static final String REMOTE_WORKSPACE_ID_PROPERTY = "structurizr.remote.workspaceId";
+    private static final String REMOTE_WORKSPACE_BRANCH_PROPERTY = "structurizr.remote.branch";
     private static final String SINGLE_WORKSPACE = "1";
 
     private File dataDirectory;
@@ -147,8 +149,12 @@ public class Configuration {
         return Long.parseLong(getConfigurationParameter(REMOTE_WORKSPACE_ID_PROPERTY, "0"));
     }
 
+    public String getRemoteBranch() {
+        return getConfigurationParameter(REMOTE_WORKSPACE_BRANCH_PROPERTY, "");
+    }
+
     public String getRemoteApiUrl() {
-        return getConfigurationParameter("structurizr.remote.apiUrl", STRUCTURIZR_CLOUD_SERVICE_API_URL);
+        return getConfigurationParameter(REMOTE_WORKSPACE_API_URL_PROPERTY, STRUCTURIZR_CLOUD_SERVICE_API_URL);
     }
 
     public String getRemoteApiKey() {

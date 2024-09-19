@@ -13,7 +13,6 @@ targetCompatibility = '17'
 
 repositories {
 	mavenCentral()
-//	mavenLocal()
 }
 
 testing {
@@ -47,14 +46,16 @@ ext {
 }
 
 dependencies {
+	def structurizrVersion = '3.0.0'
+
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:10.1.24'
 	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
 
-	implementation 'com.structurizr:structurizr-dsl:2.2.0'
-	implementation 'com.structurizr:structurizr-autolayout:2.2.0'
-	implementation 'com.structurizr:structurizr-inspection:2.2.0'
+	implementation "com.structurizr:structurizr-dsl:${structurizrVersion}"
+	implementation "com.structurizr:structurizr-autolayout:${structurizrVersion}"
+	implementation "com.structurizr:structurizr-inspection:${structurizrVersion}"
 
 	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.3'
 

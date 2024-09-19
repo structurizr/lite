@@ -20,37 +20,34 @@ workspace "Structurizr Lite" {
                     source "${STRUCTURIZR_LITE_HOME}/src/main/java"
                     strategy {
                         technology "Java Component"
-                        matcher nameSuffix "Component"
-                        supportingTypes inpackage
+                        matcher name-suffix "Component"
+                        supportingTypes in-package
+                        url prefix-src "https://github.com/structurizr/lite/blob/main/src/main/java"
+                        forEach {
+                            -> data "Reads from and writes to"
+                            tag "Java Component"
+                        }
                     }
                     strategy {
                         technology "Spring MVC Controller"
                         matcher annotation "org.springframework.stereotype.Controller"
-                        filter excludeRegex ".*AbstractController|.*.Http[0-9]*Controller"
+                        filter exclude fqn-regex ".*AbstractController|.*.Http[0-9]*Controller"
+                        url prefix-src "https://github.com/structurizr/lite/blob/main/src/main/java"
+                        forEach {
+                            -> ui "Renders HTML page in"
+                        }
                     }
                     strategy {
                         technology "Spring MVC REST Controller"
                         matcher annotation "org.springframework.web.bind.annotation.RestController"
-                        filter excludeRegex ".*HealthCheckController"
+                        filter exclude fqn-regex ".*HealthCheckController"
+                        description first-sentence
+                        url prefix-src "https://github.com/structurizr/lite/blob/main/src/main/java"
+                        forEach {
+                            ui -> this "Makes API calls using"
+                            tag "API Component"
+                        }
                     }
-                }
-
-                !script groovy {
-                    element.components.each { it.url = it.properties["component.src"].replace(context.getDslParser().getConstant("STRUCTURIZR_LITE_HOME") + "/src/main/java", "https://github.com/structurizr/lite/blob/main/src/main/java") }
-                }
-
-                !elements "element.parent==server && element.technology==Java Component" {
-                    -> data "Reads from and writes to"
-                    tag "Java Component"
-                }
-
-                !elements "element.parent==server && element.technology==Spring MVC REST Controller" {
-                    ui -> this "Makes API calls using"
-                    tag "API Component"
-                }
-
-                !elements "element.parent==server && element.technology==Spring MVC Controller" {
-                    -> ui "Renders HTML page in"
                 }
             }
         }
