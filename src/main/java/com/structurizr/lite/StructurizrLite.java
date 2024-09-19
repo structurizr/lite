@@ -118,12 +118,6 @@ public class StructurizrLite extends SpringBootServletInitializer {
 		}
 
 		try {
-			log.info(" - structurizr-import: v" + Class.forName(DefaultDocumentationImporter.class.getCanonicalName()).getPackage().getImplementationVersion());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		try {
 			log.info(" - structurizr-graphviz: v" + Class.forName(GraphvizAutomaticLayout.class.getCanonicalName()).getPackage().getImplementationVersion());
 		} catch (Exception e) {
 			e.printStackTrace();
