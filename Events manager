@@ -1,0 +1,19 @@
+# Arquitectura de Software para Gestión de Eventos de error en el Procesamiento de Datos Masivos
+
+## Formulación y Descripción del problema
+
+Actualmente sobre una entidad financiera se ejecutan procesos contables en las horas de la madrugada que generan la información necesaria para realizar el cierre contable mensual, lo cual consume más tiempo del esperado y aumenta el riesgo de cometer errores; durante el transcurso de este proceso es necesario realizar la revisión manual de las fallas presentadas al siguiente día, ya que no se recibe ningún tipo de notificación que alerte sobre los eventos ocurridos.  Dado lo anterior se requiere una solución que realice el envió de notificaciones en tiempo real y permita la gestión y administración de las inconsistencias detectadas.
+
+## Proceso estado actual
+
+Ejemplo de link externo: [link Externo](https://docs.structurizr.com/lite) Diagrama de Mermaid
+
+## Pregunta
+
+¿Cómo podemos diseñar, desarrollar e implementar una solución de software que permita detectar, guardar y gestionar eventos de error en un entorno de procesos masivos de manera eficiente, minimizando el impacto sobre el sistema y brindando una respuesta oportuna en la resolución de incidentes?
+
+## Propuesta de solución
+
+Desarrollar una app web que permita gestionar de manera centralizada eventos de error en procesos masivos, minimizando el impacto en el sistema y facilitando la resolución de incidentes.
+
+Ejemplo de link externo: [link Externo](https://docs.structurizr.com/lite) Diagrama de contexto
