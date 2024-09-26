@@ -1,6 +1,6 @@
 plugins {
-	id 'org.springframework.boot' version '3.3.0'
-	id 'io.spring.dependency-management' version '1.1.0'
+	id 'org.springframework.boot' version '3.3.4'
+	id 'io.spring.dependency-management' version '1.1.6'
 	id 'java'
 	id 'jvm-test-suite'
 	id 'war'
@@ -13,6 +13,7 @@ targetCompatibility = '17'
 
 repositories {
 	mavenCentral()
+//	mavenLocal()
 }
 
 testing {
@@ -46,25 +47,23 @@ ext {
 }
 
 dependencies {
-	def structurizrVersion = '3.0.0'
-
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:10.1.24'
+	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:10.1.30'
 	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
 
+	def structurizrVersion = '3.0.0'
 	implementation "com.structurizr:structurizr-dsl:${structurizrVersion}"
 	implementation "com.structurizr:structurizr-autolayout:${structurizrVersion}"
 	implementation "com.structurizr:structurizr-inspection:${structurizrVersion}"
 
-	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.3'
+	implementation 'org.codehaus.groovy:groovy-jsr223:3.0.22'
+	implementation 'org.jetbrains.kotlin:kotlin-scripting-jsr223:1.9.25'
+	implementation 'org.jruby:jruby-core:9.4.8.0'
 
-	implementation 'org.codehaus.groovy:groovy-jsr223:3.0.19'
-	implementation 'org.jetbrains.kotlin:kotlin-scripting-jsr223:1.8.10'
-	implementation 'org.jruby:jruby-core:9.4.4.0'
-
-	implementation 'org.apache.lucene:lucene-core:9.11.0'
-	implementation 'org.apache.lucene:lucene-queryparser:9.11.0'
+	def luceneVersion = '9.11.1'
+	implementation "org.apache.lucene:lucene-core:${luceneVersion}"
+	implementation "org.apache.lucene:lucene-queryparser:${luceneVersion}"
 }
 
 bootWar {
