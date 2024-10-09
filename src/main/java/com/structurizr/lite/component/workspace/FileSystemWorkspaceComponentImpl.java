@@ -6,7 +6,7 @@ import com.structurizr.lite.Configuration;
 import com.structurizr.lite.component.search.SearchComponent;
 import com.structurizr.lite.domain.WorkspaceMetaData;
 import com.structurizr.lite.util.DateUtils;
-import com.structurizr.lite.util.InputStreamAndContentLength;
+import com.structurizr.lite.util.Image;
 import com.structurizr.util.DslTemplate;
 import com.structurizr.util.WorkspaceUtils;
 import com.structurizr.validation.WorkspaceScopeValidatorFactory;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -30,6 +29,8 @@ import java.util.List;
 class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
 
     private static final Log log = LogFactory.getLog(FileSystemWorkspaceComponentImpl.class);
+
+    private static final String IMAGES_DIRECTORY = "images";
 
     private File dataDirectory;
     private String filename;
@@ -233,15 +234,21 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
     }
 
     @Override
-    public InputStreamAndContentLength getImage(long workspaceId, String diagramKey) throws WorkspaceComponentException {
+    public Image getImage(long workspaceId, String filename) throws WorkspaceComponentException {
         try {
-            File imagesDirectory = getPathToWorkspaceImages(workspaceId);
-            File file = new File(imagesDirectory, diagramKey);
+            // first try .structurizr/{workspaceId}/images
+            File file = new File(getPathToWorkspaceWorkDirectoryImages(workspaceId), filename);
             if (file.exists()) {
-                return new InputStreamAndContentLength(new FileInputStream(file), file.length());
+                return new Image(file);
+            } else {
+                // otherwise try {workspaceId}/images
+                file = new File(getPathToWorkspaceImages(workspaceId), filename);
+                if (file.exists()) {
+                    return new Image(file);
+                }
             }
         } catch (Exception e) {
-            String message = "Could not get " + diagramKey + " for workspace";
+            String message = "Could not get image \"" + filename + "\" for workspace";
             log.warn(e.getMessage() + " - " + message);
         }
 
@@ -254,7 +261,7 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
         byte[] decodedImage = Base64.getDecoder().decode(base64Image.getBytes(StandardCharsets.UTF_8));
 
         try {
-            File imagesDirectory = getPathToWorkspaceImages(workspaceId);
+            File imagesDirectory = getPathToWorkspaceWorkDirectoryImages(workspaceId);
             File file = new File(imagesDirectory, filename);
             Files.write(file.toPath(), decodedImage);
 
@@ -265,8 +272,21 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
         }
     }
 
+    private File getPathToWorkspaceWorkDirectoryImages(long workspaceId) {
+        File path = new File(new File(Configuration.getInstance().getWorkDirectory(), "" + workspaceId), IMAGES_DIRECTORY);
+        if (!path.exists()) {
+            try {
+                Files.createDirectories(path.toPath());
+            } catch (IOException e) {
+                log.error(e);
+            }
+        }
+
+        return path;
+    }
+
     private File getPathToWorkspaceImages(long workspaceId) {
-        File path = new File(new File(Configuration.getInstance().getWorkDirectory(), "" + workspaceId), "images");
+        File path = new File(getDataDirectory(workspaceId), IMAGES_DIRECTORY);
         if (!path.exists()) {
             try {
                 Files.createDirectories(path.toPath());

@@ -4,14 +4,14 @@ import com.structurizr.lite.Configuration;
 import com.structurizr.lite.component.workspace.WorkspaceComponentException;
 import com.structurizr.lite.domain.WorkspaceMetaData;
 import com.structurizr.lite.util.HtmlUtils;
-import com.structurizr.lite.util.InputStreamAndContentLength;
+import com.structurizr.lite.util.Image;
 import com.structurizr.view.PaperSize;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -97,28 +97,35 @@ public class DiagramsController extends AbstractController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/workspace/{workspaceId}/images/{diagramKey}.png", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
-    public Resource getImage(@PathVariable("workspaceId") long workspaceId,
-                             @PathVariable("diagramKey") String diagramKey,
+    @RequestMapping(value = "/workspace/images/{filename}", method = RequestMethod.GET)
+    public ResponseEntity getImage(@PathVariable("filename") String filename,
+                                   HttpServletResponse response) {
+        return getImage(1, filename, response);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/workspace/{workspaceId}/images/{filename}", method = RequestMethod.GET)
+    public ResponseEntity getImage(@PathVariable("workspaceId") long workspaceId,
+                             @PathVariable("filename") String filename,
                              HttpServletResponse response) {
-        diagramKey = HtmlUtils.filterHtml(diagramKey);
+        filename = HtmlUtils.filterHtml(filename);
 
-        if (diagramKey.equals("thumbnail") || diagramKey.endsWith("-thumbnail")) {
-            try {
-                InputStreamAndContentLength inputStreamAndContentLength = workspaceComponent.getImage(workspaceId, diagramKey + ".png");
-                if (inputStreamAndContentLength != null) {
-                    return new InputStreamResource(inputStreamAndContentLength.getInputStream()) {
-                        @Override
-                        public long contentLength() {
-                            return inputStreamAndContentLength.getContentLength();
-                        }
-                    };
-                }
-            } catch (Exception e) {
-                log.error(e);
+        try {
+            Image image = workspaceComponent.getImage(workspaceId, filename);
+            if (image != null) {
+                return ResponseEntity
+                        .ok()
+                        .contentType(MediaType.valueOf(image.getContentType()))
+                        .body(new InputStreamResource(image.getInputStream()) {
+                            @Override
+                            public long contentLength() {
+                                return image.getContentLength();
+                            }
+                        });
             }
+        } catch (Exception e) {
+            log.error(e);
         }
-
 
         response.setStatus(404);
         return null;
