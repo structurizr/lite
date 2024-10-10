@@ -1,6 +1,7 @@
 package com.structurizr.lite;
 
 import com.structurizr.lite.util.RandomGuidGenerator;
+import com.structurizr.lite.util.Version;
 import com.structurizr.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,6 +38,7 @@ public class Configuration {
 
     private File dataDirectory;
     private String webUrl;
+    private final String versionSuffix;
 
     private final String apiKey = new RandomGuidGenerator().generate();
     private final String apiSecret = new RandomGuidGenerator().generate();
@@ -50,6 +52,12 @@ public class Configuration {
     }
 
     private Configuration() {
+        String buildNumber = new Version().getBuildNumber();
+        if (StringUtils.isNullOrEmpty(buildNumber)) {
+            versionSuffix = "";
+        } else {
+            versionSuffix = "-" + buildNumber;
+        }
     }
 
     public static Configuration getInstance() {
@@ -75,7 +83,7 @@ public class Configuration {
     }
 
     public String getVersionSuffix() {
-        return "";
+        return versionSuffix;
     }
 
     public String getApiUrl() {

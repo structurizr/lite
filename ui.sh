@@ -1,6 +1,7 @@
-# - this is a temporary script that merges the contents of the structurizr/ui repository into this directory,
-# - it will likely be migrated in the Gradle build file at some point in the future
+# - this script merges the contents of the structurizr/ui repository into this directory,
 # - this has only been tested on MacOS
+
+export STRUCTURIZR_BUILD_NUMBER=$1
 
 export STRUCTURIZR_UI_DIR=../structurizr-ui
 export STRUCTURIZR_LITE_DIR=.
@@ -10,7 +11,23 @@ mkdir $STRUCTURIZR_LITE_DIR/src/main/resources/static/static
 
 # JavaScript
 mkdir $STRUCTURIZR_LITE_DIR/src/main/resources/static/static/js
+rm $STRUCTURIZR_LITE_DIR/src/main/resources/static/static/js/structurizr*.js
 cp $STRUCTURIZR_UI_DIR/src/js/* $STRUCTURIZR_LITE_DIR/src/main/resources/static/static/js
+
+if [[ $STRUCTURIZR_BUILD_NUMBER != "" ]]
+then
+  for file in $STRUCTURIZR_LITE_DIR/src/main/resources/static/static/js/structurizr*.js
+  do
+    filename="${file%.*}"
+
+    if [[ $file == *structurizr-embed.js ]]
+    then
+      echo "Skipping $filename"
+    else
+      mv "$filename.js" "$filename-$STRUCTURIZR_BUILD_NUMBER.js"
+    fi
+  done
+fi
 
 # CSS
 mkdir $STRUCTURIZR_LITE_DIR/src/main/resources/static/static/css
