@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
@@ -97,19 +98,23 @@ public class DiagramsController extends AbstractController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/workspace/images/{filename}", method = RequestMethod.GET)
-    public ResponseEntity getImage(@PathVariable("filename") String filename,
+    @RequestMapping(value = "/workspace/images/**", method = RequestMethod.GET)
+    public ResponseEntity getImage(HttpServletRequest request,
                                    HttpServletResponse response) {
+        String filename = extractFilenameFromRequest("/workspace/images/", request);
         return getImage(1, filename, response);
     }
 
     @ResponseBody
-    @RequestMapping(value = "/workspace/{workspaceId}/images/{filename}", method = RequestMethod.GET)
+    @RequestMapping(value = "/workspace/{workspaceId}/images/**", method = RequestMethod.GET)
     public ResponseEntity getImage(@PathVariable("workspaceId") long workspaceId,
-                             @PathVariable("filename") String filename,
-                             HttpServletResponse response) {
-        filename = HtmlUtils.filterHtml(filename);
+                                   HttpServletRequest request,
+                                   HttpServletResponse response) {
+        String filename = extractFilenameFromRequest("/workspace/" + workspaceId + "/images/", request);
+        return getImage(workspaceId, filename, response);
+    }
 
+    private ResponseEntity getImage(long workspaceId, String filename, HttpServletResponse response) {
         try {
             Image image = workspaceComponent.getImage(workspaceId, filename);
             if (image != null) {
@@ -129,6 +134,17 @@ public class DiagramsController extends AbstractController {
 
         response.setStatus(404);
         return null;
+    }
+
+    private String extractFilenameFromRequest(String prefix, HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        String filename = requestURI.substring(prefix.length());
+
+        // Prevent directory traversal attacks
+        filename = filename.replaceAll("\\.\\./", "").replaceAll("\\.\\.\\\\", "");
+        filename = HtmlUtils.filterHtml(filename);
+
+        return filename;
     }
 
 }
