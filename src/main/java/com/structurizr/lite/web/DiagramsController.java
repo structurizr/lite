@@ -97,14 +97,14 @@ public class DiagramsController extends AbstractController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/workspace/images/{filename}", method = RequestMethod.GET)
+    @RequestMapping(value = "/workspace/images/{*filename}", method = RequestMethod.GET)
     public ResponseEntity getImage(@PathVariable("filename") String filename,
                                    HttpServletResponse response) {
         return getImage(1, filename, response);
     }
 
     @ResponseBody
-    @RequestMapping(value = "/workspace/{workspaceId}/images/{filename}", method = RequestMethod.GET)
+    @RequestMapping(value = "/workspace/{workspaceId}/images/{*filename}", method = RequestMethod.GET)
     public ResponseEntity getImage(@PathVariable("workspaceId") long workspaceId,
                              @PathVariable("filename") String filename,
                              HttpServletResponse response) {
