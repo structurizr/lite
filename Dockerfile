@@ -1,5 +1,5 @@
 FROM eclipse-temurin:21.0.5_11-jre-jammy
-ENV PORT 8080
+ENV PORT=8080
 
 RUN set -eux; \
 	apt-get update; \
