@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21.0.4_7-jre-jammy
+FROM eclipse-temurin:21.0.5_11-jre-jammy
 ENV PORT 8080
 
 RUN set -eux; \
