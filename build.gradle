@@ -13,7 +13,7 @@ targetCompatibility = '17'
 
 repositories {
 	mavenCentral()
-//	mavenLocal()
+    mavenLocal()
 }
 
 testing {
