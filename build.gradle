@@ -52,7 +52,7 @@ dependencies {
 	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
 
-	def structurizrVersion = '3.1.0'
+	def structurizrVersion = '3.2.0'
 	implementation "com.structurizr:structurizr-dsl:${structurizrVersion}"
 	implementation "com.structurizr:structurizr-autolayout:${structurizrVersion}"
 	implementation "com.structurizr:structurizr-inspection:${structurizrVersion}"
