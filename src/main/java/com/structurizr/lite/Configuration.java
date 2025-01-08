@@ -36,6 +36,8 @@ public class Configuration {
     private static final String REMOTE_WORKSPACE_BRANCH_PROPERTY = "structurizr.remote.branch";
     private static final String SINGLE_WORKSPACE = "1";
 
+    public static final boolean PREVIEW_FEATURES = false;
+
     private File dataDirectory;
     private String webUrl;
     private final String versionSuffix;

@@ -129,6 +129,7 @@ public class StructurizrLite extends SpringBootServletInitializer {
 		log.info("URL: " + Configuration.getInstance().getWebUrl());
 		log.info("Auto-save interval: " + Configuration.getInstance().getAutoSaveInterval() + "ms");
 		log.info("Auto-refresh interval: " + Configuration.getInstance().getAutoRefreshInterval() + "ms");
+		log.info("Preview features: " + Configuration.PREVIEW_FEATURES);
 
 		try {
 			ProcessBuilder processBuilder = new ProcessBuilder();
