@@ -7,7 +7,11 @@ export STRUCTURIZR_BUILD_NUMBER=$1
 export STRUCTURIZR_UI_DIR=../structurizr-ui
 export STRUCTURIZR_LITE_DIR=.
 
-rm -rf $STRUCTURIZR_LITE_DIR/src/main/resources/static/static
+rm -rf $STRUCTURIZR_LITE_DIR/src/main/resources/static/static/bootstrap-icons
+rm -rf $STRUCTURIZR_LITE_DIR/src/main/resources/static/static/css
+rm -rf $STRUCTURIZR_LITE_DIR/src/main/resources/static/static/html
+rm -rf $STRUCTURIZR_LITE_DIR/src/main/resources/static/static/img
+rm -rf $STRUCTURIZR_LITE_DIR/src/main/resources/static/static/js
 mkdir -p $STRUCTURIZR_LITE_DIR/src/main/resources/static/static
 
 # JavaScript

@@ -4,7 +4,11 @@
 build/*
 .idea/*
 src/main/resources/build.properties
-src/main/resources/static/*
+src/main/resources/static/bootstrap-icons/*
+src/main/resources/static/css/*
+src/main/resources/static/html/*
+src/main/resources/static/img/*
+src/main/resources/static/js/*
 
 src/main/webapp/WEB-INF/fragments/graphviz.jspf
 src/main/webapp/WEB-INF/fragments/progress-message.jspf
