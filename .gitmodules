@@ -1,0 +1,3 @@
+[submodule "src/main/resources/static/static/themes"]
+	path = src/main/resources/static/static/themes
+	url = https://github.com/structurizr/themes
