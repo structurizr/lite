@@ -47,7 +47,7 @@ public class Configuration {
 
     private boolean graphvizEnabled = false;
 
-    private final static Configuration INSTANCE = new Configuration();
+    private static Configuration INSTANCE;
 
     static {
         initLogger();
@@ -60,6 +60,15 @@ public class Configuration {
         } else {
             versionSuffix = "-" + buildNumber;
         }
+    }
+
+    public static Configuration init(File dataDirectory) {
+        INSTANCE = new Configuration();
+        INSTANCE.dataDirectory = dataDirectory;
+
+        INSTANCE.setWebUrl(INSTANCE.getConfigurationParameter(URL_PROPERTY, ""));
+
+        return INSTANCE;
     }
 
     public static Configuration getInstance() {
@@ -143,12 +152,6 @@ public class Configuration {
 
     public File getWorkDirectory() {
         return new File(dataDirectory, WORK_DIRECTORY_NAME);
-    }
-
-    void setDataDirectory(File dataDirectory) {
-        this.dataDirectory = dataDirectory;
-
-        setWebUrl(getConfigurationParameter(URL_PROPERTY, ""));
     }
 
     public String getApiKey() {

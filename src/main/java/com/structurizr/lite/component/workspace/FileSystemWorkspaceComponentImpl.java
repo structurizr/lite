@@ -9,6 +9,7 @@ import com.structurizr.lite.domain.WorkspaceMetaData;
 import com.structurizr.lite.util.DateUtils;
 import com.structurizr.lite.util.Image;
 import com.structurizr.util.DslTemplate;
+import com.structurizr.util.StringUtils;
 import com.structurizr.util.WorkspaceUtils;
 import com.structurizr.validation.WorkspaceScopeValidatorFactory;
 import org.apache.commons.logging.Log;
@@ -237,41 +238,59 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
 
     @Override
     public Image getImage(long workspaceId, String filename) throws WorkspaceComponentException {
-        try {
-            // first try .structurizr/{workspaceId}/images
-            File file = new File(getPathToWorkspaceWorkDirectoryImages(workspaceId), filename);
-            if (file.exists()) {
-                return new Image(file);
-            } else {
-                // otherwise try {workspaceId}/images
-                file = new File(getPathToWorkspaceImages(workspaceId), filename);
+        if (isImage(filename)) {
+            try {
+                // first try .structurizr/{workspaceId}/images
+                File file = new File(getPathToWorkspaceWorkDirectoryImages(workspaceId), filename);
                 if (file.exists()) {
                     return new Image(file);
+                } else {
+                    // otherwise try {workspaceId}/images
+                    file = new File(getPathToWorkspaceImages(workspaceId), filename);
+                    if (file.exists()) {
+                        return new Image(file);
+                    }
                 }
+            } catch (Exception e) {
+                String message = "Could not get image \"" + filename + "\" for workspace";
+                log.warn(e.getMessage() + " - " + message);
             }
-        } catch (Exception e) {
-            String message = "Could not get image \"" + filename + "\" for workspace";
-            log.warn(e.getMessage() + " - " + message);
+        } else {
+            throw new WorkspaceComponentException(filename + " is not an image");
         }
 
         return null;
     }
 
     @Override
-    public boolean putImage(long workspaceId, String filename, String imageAsBase64DataUri) {
+    public boolean putImage(long workspaceId, String filename, String imageAsBase64DataUri) throws WorkspaceComponentException {
         String base64Image = imageAsBase64DataUri.split(",")[1];
         byte[] decodedImage = Base64.getDecoder().decode(base64Image.getBytes(StandardCharsets.UTF_8));
 
-        try {
-            File imagesDirectory = getPathToWorkspaceWorkDirectoryImages(workspaceId);
-            File file = new File(imagesDirectory, filename);
-            Files.write(file.toPath(), decodedImage);
+        if (isImage(filename)) {
+            try {
+                File imagesDirectory = getPathToWorkspaceWorkDirectoryImages(workspaceId);
+                File file = new File(imagesDirectory, filename);
+                Files.write(file.toPath(), decodedImage);
 
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new WorkspaceComponentException(filename + " is not an image");
+        }
+
+        return false;
+    }
+
+    private boolean isImage(String filename) {
+        if (StringUtils.isNullOrEmpty(filename)) {
             return false;
         }
+
+        filename = filename.toLowerCase();
+        return filename.endsWith(".jpg") || filename.endsWith(".jepg") || filename.endsWith(".png") || filename.endsWith(".gif");
     }
 
     private File getPathToWorkspaceWorkDirectoryImages(long workspaceId) {

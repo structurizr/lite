@@ -45,7 +45,7 @@ public class StructurizrLite extends SpringBootServletInitializer {
 			structurizrDataDirectory = new File(args[0]);
 		}
 
-		Configuration.getInstance().setDataDirectory(structurizrDataDirectory);
+		Configuration.init(structurizrDataDirectory);
 
 		SpringApplication.run(StructurizrLite.class, args);
 		start();

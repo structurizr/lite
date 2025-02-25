@@ -30,6 +30,7 @@ public class ApacheLuceneSearchComponentTests {
     public void setUp() throws Exception {
         DATA_DIRECTORY.mkdirs();
         dataDirectory = Files.createTempDirectory(DATA_DIRECTORY.toPath(), "").toFile();
+        Configuration.init(dataDirectory);
         searchComponent = new ApacheLuceneSearchComponentImpl(dataDirectory);
     }
 

@@ -31,7 +31,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @org.springframework.stereotype.Component
 class ApacheLuceneSearchComponentImpl implements SearchComponent {
