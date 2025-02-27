@@ -307,16 +307,7 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
     }
 
     private File getPathToWorkspaceImages(long workspaceId) {
-        File path = new File(getDataDirectory(workspaceId), IMAGES_DIRECTORY);
-        if (!path.exists()) {
-            try {
-                Files.createDirectories(path.toPath());
-            } catch (IOException e) {
-                log.error(e);
-            }
-        }
-
-        return path;
+        return new File(getDataDirectory(workspaceId), IMAGES_DIRECTORY);
     }
 
     @Scheduled(fixedDelayString = "#{@applicationPropertyService.getAutoRefreshInterval()}")
