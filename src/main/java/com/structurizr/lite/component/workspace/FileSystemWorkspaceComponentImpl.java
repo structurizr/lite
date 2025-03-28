@@ -1,7 +1,6 @@
 package com.structurizr.lite.component.workspace;
 
 import com.structurizr.Workspace;
-import com.structurizr.dsl.Features;
 import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.lite.Configuration;
 import com.structurizr.lite.component.search.SearchComponent;
