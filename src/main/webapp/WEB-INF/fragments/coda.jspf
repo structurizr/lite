@@ -7,7 +7,13 @@
             |
             <span id="buildNumber">Build ${version.buildNumber}</span> <!-- <fmt:formatDate value="${version.buildTimestamp}" pattern="EEE dd MMM yyyy HH:mm z" /> -->
             |
-            <a href="https://docs.structurizr.com/lite" target="_blank">Documentation</a>
+            <a href="https://docs.structurizr.com/lite" target="_blank">Help</a>
+        </p>
+        <p>
+            <img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/moon.svg" class="icon-sm" />
+            <a id="renderingModeLightLink" href="">Light</a> |
+            <a id="renderingModeDarkLink" href="">Dark</a> |
+            <a id="renderingModeSystemLink" href="">System</a>
         </p>
     </div>
     </c:if>
@@ -22,5 +28,20 @@
         function logError(msg, url, lineNo, error) {
             console.log(msg);
         }
+
+        $('#renderingModeLightLink').click(function(event) {
+            event.preventDefault();
+            structurizr.ui.setRenderingMode(structurizr.ui.RENDERING_MODE_LIGHT);
+        });
+
+        $('#renderingModeDarkLink').click(function(event) {
+            event.preventDefault();
+            structurizr.ui.setRenderingMode(structurizr.ui.RENDERING_MODE_DARK);
+        });
+
+        $('#renderingModeSystemLink').click(function(event) {
+            event.preventDefault();
+            structurizr.ui.setRenderingMode(structurizr.ui.RENDERING_MODE_SYSTEM);
+        });
     </script>
 </html>
