@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '3.4.2'
+	id 'org.springframework.boot' version '3.4.4'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id 'java'
 	id 'jvm-test-suite'
@@ -48,7 +48,7 @@ ext {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:10.1.34'
+	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:10.1.39'
 	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
 
@@ -56,9 +56,9 @@ dependencies {
 	implementation "com.structurizr:structurizr-autolayout:${structurizrVersion}"
 	implementation "com.structurizr:structurizr-inspection:${structurizrVersion}"
 
-	implementation 'org.codehaus.groovy:groovy-jsr223:3.0.23'
+	implementation 'org.codehaus.groovy:groovy-jsr223:3.0.24'
 	implementation 'org.jetbrains.kotlin:kotlin-scripting-jsr223:1.9.25'
-	implementation 'org.jruby:jruby-core:9.4.10.0'
+	implementation 'org.jruby:jruby-core:9.4.12.0'
 
 	def luceneVersion = '9.12.1'
 	implementation "org.apache.lucene:lucene-core:${luceneVersion}"
