@@ -22,7 +22,7 @@
     <link href="${structurizrConfiguration.cdnUrl}/css/structurizr-embed.css" rel="stylesheet" media="screen" />
     </c:if>
     <link href="${structurizrConfiguration.cdnUrl}/css/structurizr-print.css" rel="stylesheet" media="print" />
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" />
+    <link href="${structurizrConfiguration.cdnUrl}/css/open-sans.css" rel="stylesheet" />
 
     <script src="${structurizrConfiguration.cdnUrl}/js/jquery-3.6.3.min.js"></script>
     <script src="${structurizrConfiguration.cdnUrl}/js/bootstrap-3.3.7.min.js"></script>
