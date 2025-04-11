@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
+import static com.structurizr.lite.component.workspace.WorkspaceDirectory.parseWorkspaceId;
+
 @Component
 class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
 
@@ -92,7 +94,19 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
         if (Configuration.getInstance().isSingleWorkspace()) {
             return dataDirectory;
         } else {
-            return new File(dataDirectory, "" + workspaceId);
+            File directory = new File(dataDirectory, "" + workspaceId);
+            if (!directory.exists()) {
+                File[] files = dataDirectory.listFiles();
+                if (files != null) {
+                    for (File file : files) {
+                        if (file.isDirectory() && parseWorkspaceId(file.getName()) == workspaceId) {
+                            return file;
+                        }
+                    }
+                }
+            }
+
+            return directory;
         }
     }
 
@@ -107,8 +121,9 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
     }
 
     private Workspace loadWorkspace(long workspaceId) {
-        File dslFile = new File(getDataDirectory(workspaceId), filename + ".dsl");
-        File jsonFile = new File(getDataDirectory(workspaceId), filename + ".json");
+        File workspaceDirectory = getDataDirectory(workspaceId);
+        File dslFile = new File(workspaceDirectory, filename + ".dsl");
+        File jsonFile = new File(workspaceDirectory, filename + ".json");
 
         Workspace workspace = null;
         if (dslFile.exists()) {
@@ -116,7 +131,7 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
         } else if (jsonFile.exists()) {
             workspace = loadWorkspaceFromJson(workspaceId, jsonFile);
         } else {
-            throw new NoWorkspaceFoundException(filename, getDataDirectory(workspaceId));
+            throw new NoWorkspaceFoundException(workspaceDirectory, filename);
         }
 
         return workspace;
@@ -186,14 +201,18 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
         File[] files = dataDirectory.listFiles();
         if (files != null) {
             for (File file : files) {
-                if (file != null && file.isDirectory() && file.getName().matches("\\d*")) {
-                    long id = Long.parseLong(file.getName());
-                    Workspace workspace = loadWorkspace(id);
-                    if (workspace == null) {
-                        workspace = new Workspace("Workspace " + id, "");
-                        workspace.setId(id);
+                long id = parseWorkspaceId(file.getName());
+                if (file.isDirectory() && id > 0) {
+                    try {
+                        Workspace workspace = loadWorkspace(id);
+                        if (workspace == null) {
+                            workspace = new Workspace("Workspace " + id, "");
+                            workspace.setId(id);
+                        }
+                        workspaces.add(toWorkspaceMetadata(workspace));
+                    } catch (Exception e) {
+                        log.warn("Ignoring workspace with ID " + id + ": " + e.getMessage());
                     }
-                    workspaces.add(toWorkspaceMetadata(workspace));
                 }
             }
         }

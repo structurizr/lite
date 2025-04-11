@@ -3,12 +3,12 @@ package com.structurizr.lite.component.workspace;
 import com.structurizr.lite.Configuration;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FileSystemWorkspaceComponentImplTests {
 
