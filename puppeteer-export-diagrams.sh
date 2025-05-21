@@ -25,7 +25,11 @@ for FORMAT in $@; do
     echo exporting $STRUCTURIZR_WORKSPACE_FILENAME diagrams to $FORMAT in $OUTPUT_DIR
     for FILE in $(node $STRUCTURIZR_EXPORT/export-diagrams.js http://localhost:$PORT $FORMAT | grep "^ - .*\\.$FORMAT" | sed "s/ - //"); do
         OUTPUT_FILE="$OUTPUT_DIR/${STRUCTURIZR_WORKSPACE_FILENAME}_${FILE}"
-        mv "$OUTPUT_DIR/$FILE" "$OUTPUT_FILE"
+        if [ $FORMAT == svg ]; then
+            svgo --config=/usr/local/lib/svgo/svgo.config.js --quiet "$OUTPUT_DIR/$FILE" -o "$OUTPUT_FILE"
+        else
+            mv "$OUTPUT_DIR/$FILE" "$OUTPUT_FILE"
+        fi
         echo exported "$OUTPUT_FILE"
     done
 done

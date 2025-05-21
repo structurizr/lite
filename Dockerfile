@@ -26,14 +26,22 @@ RUN set -eux; \
 	cd $STRUCTURIZR_EXPORT; \
         npm install puppeteer; \
 	npx puppeteer browsers install --install-deps chrome-headless-shell@stable; \
+	npm install -g svgo; \
 	mkdir $STRUCTURIZR_WORKSPACE_PATH; \
         apt-get remove -y --purge git npm; \
         apt-get autoremove -y; \
 	rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
+COPY svgo /usr/local/lib/svgo
 COPY --chmod=0775 puppeteer-export-diagrams.sh /usr/local/bin/export-diagrams
 COPY --chmod=0775 puppeteer-export-documentation.sh /usr/local/bin/export-documentation
 
 WORKDIR /workspace
 
 CMD ["/bin/bash"]
+
+# Local Variables:
+# dockerfile-indent-offset: 8
+# tab-width: 8
+# indent-tabs-mode: t
+# End:
