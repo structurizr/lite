@@ -11,6 +11,10 @@ import com.structurizr.util.DslTemplate;
 import com.structurizr.util.StringUtils;
 import com.structurizr.util.WorkspaceUtils;
 import com.structurizr.validation.WorkspaceScopeValidatorFactory;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Stream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -120,8 +124,7 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
         }
     }
 
-    private Workspace loadWorkspace(long workspaceId) {
-        File workspaceDirectory = getDataDirectory(workspaceId);
+    private Workspace loadWorkspace(long workspaceId, File workspaceDirectory) {
         File dslFile = new File(workspaceDirectory, filename + ".dsl");
         File jsonFile = new File(workspaceDirectory, filename + ".json");
 
@@ -197,37 +200,38 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
 
     public List<WorkspaceMetaData> getWorkspaces() {
         List<WorkspaceMetaData> workspaces = new ArrayList<>();
-
-        File[] files = dataDirectory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                long id = parseWorkspaceId(file.getName());
-                if (file.isDirectory() && id > 0) {
-                    try {
-                        Workspace workspace = loadWorkspace(id);
-                        if (workspace == null) {
-                            workspace = new Workspace("Workspace " + id, "");
-                            workspace.setId(id);
-                        }
-                        workspaces.add(toWorkspaceMetadata(workspace));
-                    } catch (Exception e) {
-                        log.warn("Ignoring workspace with ID " + id + ": " + e.getMessage());
-                    }
+        getWorkspaceDirs().forEach(wd -> {
+            try {
+                Workspace workspace = loadWorkspace(wd.getKey(), wd.getValue());
+                if (workspace == null) {
+                    workspace = new Workspace("Workspace " + wd.getKey(), "");
+                    workspace.setId(wd.getKey());
                 }
+                workspaces.add(toWorkspaceMetadata(workspace));
+            } catch (Exception e) {
+                log.warn("Ignoring workspace with ID " + wd.getKey() + ": " + e.getMessage());
             }
-        }
+        });
 
         return workspaces;
     }
 
     public Workspace getWorkspace(long workspaceId) {
-        Workspace workspace = loadWorkspace(workspaceId);
+        return getWorkspaceDirs()
+            .filter(e -> e.getKey().equals(workspaceId))
+            .findFirst()
+            .map(f -> loadWorkspace(f.getKey(), f.getValue()))
+            .map(ws -> {
+                ws.setId(workspaceId);
+                return ws;
+            })
+            .orElse(null);
+    }
 
-        if (workspace != null) {
-            workspace.setId(workspaceId);
-        }
-
-        return workspace;
+    private Stream<Entry<Long, File>> getWorkspaceDirs() {
+        return Arrays.stream(dataDirectory.listFiles(f -> f.isDirectory()))
+            .map(f -> Map.entry(parseWorkspaceId(f.getName()), f))
+            .filter(entry -> entry.getKey() > 0);
     }
 
     @Override
