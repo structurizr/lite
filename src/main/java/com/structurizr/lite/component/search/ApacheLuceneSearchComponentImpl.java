@@ -71,7 +71,7 @@ class ApacheLuceneSearchComponentImpl implements SearchComponent {
 
         if (!indexDirectory.exists()) {
             try {
-                Files.createDirectory(indexDirectory.toPath());
+                Files.createDirectories(indexDirectory.toPath());
             } catch (IOException e) {
                 log.error(e);
             }
