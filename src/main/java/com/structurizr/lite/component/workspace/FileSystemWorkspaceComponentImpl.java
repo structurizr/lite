@@ -2,6 +2,7 @@ package com.structurizr.lite.component.workspace;
 
 import com.structurizr.Workspace;
 import com.structurizr.dsl.StructurizrDslParser;
+import com.structurizr.inspection.DefaultInspector;
 import com.structurizr.lite.Configuration;
 import com.structurizr.lite.component.search.SearchComponent;
 import com.structurizr.lite.domain.WorkspaceMetaData;
@@ -167,6 +168,9 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
             // validate workspace scope
             WorkspaceScopeValidatorFactory.getValidator(workspace).validate(workspace);
 
+            // run default inspections
+            new DefaultInspector(workspace);
+            
             if (!workspace.getModel().isEmpty() && workspace.getViews().isEmpty()) {
                 workspace.getViews().createDefaultViews();
             }
