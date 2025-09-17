@@ -178,7 +178,7 @@ public class StructurizrLite extends SpringBootServletInitializer {
 		log.info("***********************************************************************************");
 		log.info("MIT License");
 		log.info("");
-		log.info("Copyright (c) 2024 Structurizr Limited");
+		log.info("Copyright (c) 2025 Structurizr Limited");
 		log.info("");
 		log.info("Permission is hereby granted, free of charge, to any person obtaining a copy");
 		log.info("of this software and associated documentation files (the \"Software\"), to deal");
