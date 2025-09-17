@@ -1,6 +1,7 @@
 package com.structurizr.lite.component.workspace;
 
 import com.structurizr.Workspace;
+import com.structurizr.dsl.DslUtils;
 import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.inspection.DefaultInspector;
 import com.structurizr.lite.Configuration;
@@ -131,6 +132,12 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
             workspace = loadWorkspaceFromDsl(workspaceId, dslFile, jsonFile);
         } else if (jsonFile.exists()) {
             workspace = loadWorkspaceFromJson(workspaceId, jsonFile);
+
+            // if the JSON file exists and contains DSL, extract this and save it
+            String embeddedDsl = DslUtils.getDsl(workspace);
+            if (!StringUtils.isNullOrEmpty(embeddedDsl)) {
+                writeToFile(dslFile, embeddedDsl);
+            }
         } else {
             throw new NoWorkspaceFoundException(workspaceDirectory, filename);
         }
