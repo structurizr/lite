@@ -5,9 +5,9 @@
         margin: 10px;
         font-size: 18px;
         max-width: 320px;
-        min-height: 360px;
-        max-height: 360px;
-        height: 360px;
+        min-height: 320px;
+        max-height: 320px;
+        height: 320px;
         padding: 10px;
         border:1px solid #ddd;
         border-radius: 4px;
@@ -52,7 +52,10 @@
                 </div>
 
                 <div class="workspaceThumbnail">
-                    <a href="/workspace/${workspace.id}"><img src="/workspace/${workspace.id}/images/thumbnail.png" alt="Thumbnail" class="img-responsive workspaceThumbnailImage" /></a>
+                    <a href="/workspace/${workspace.id}">
+                    <img src="/workspace/${workspace.id}/images/thumbnail.png" alt="Thumbnail" class="img-light img-responsive workspaceThumbnailImage" />
+                    <img src="/workspace/${workspace.id}/images/thumbnail-dark.png" alt="Thumbnail" class="img-dark img-responsive workspaceThumbnailImage" />
+                    </a>
                 </div>
             </div>
         </c:forEach>
