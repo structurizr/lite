@@ -60,7 +60,7 @@ dependencies {
 	implementation 'org.jetbrains.kotlin:kotlin-scripting-jsr223:1.9.25'
 	implementation 'org.jruby:jruby-core:9.4.12.1'
 
-	def luceneVersion = '9.12.1'
+	def luceneVersion = '9.12.2'
 	implementation "org.apache.lucene:lucene-core:${luceneVersion}"
 	implementation "org.apache.lucene:lucene-queryparser:${luceneVersion}"
 
