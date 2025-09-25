@@ -18,6 +18,13 @@
     <link href="${structurizrConfiguration.cdnUrl}/css/bootstrap-3.3.7.min.css" rel="stylesheet" media="screen" />
     <link href="${structurizrConfiguration.cdnUrl}/css/bootstrap-theme-3.3.7.min.css" rel="stylesheet" media="screen" />
     <link href="${structurizrConfiguration.cdnUrl}/css/structurizr.css" rel="stylesheet" media="screen" />
+
+    <c:if test="${not empty css}">
+    <style>
+    ${css}
+    </style>
+    </c:if>
+
     <c:if test="${embed eq true}">
     <link href="${structurizrConfiguration.cdnUrl}/css/structurizr-embed.css" rel="stylesheet" media="screen" />
     </c:if>
@@ -29,6 +36,16 @@
     <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr${structurizrConfiguration.versionSuffix}.js"></script>
     <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr-ui${structurizrConfiguration.versionSuffix}.js"></script>
     <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr-util${structurizrConfiguration.versionSuffix}.js"></script>
+
+    <c:if test="${not empty js}">
+    <script nonce="${scriptNonce}">
+        try {
+    ${js}
+        } catch (err) {
+            console.error(err);
+        }
+    </script>
+    </c:if>
 </head>
 
 <script nonce="${scriptNonce}">
