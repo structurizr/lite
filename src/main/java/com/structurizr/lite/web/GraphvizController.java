@@ -3,6 +3,7 @@ package com.structurizr.lite.web;
 import com.structurizr.Workspace;
 import com.structurizr.autolayout.graphviz.GraphvizAutomaticLayout;
 import com.structurizr.autolayout.graphviz.RankDirection;
+import com.structurizr.http.HttpClient;
 import com.structurizr.lite.Configuration;
 import com.structurizr.util.StringUtils;
 import com.structurizr.util.WorkspaceUtils;
@@ -42,6 +43,8 @@ public class GraphvizController {
                 Workspace workspace = WorkspaceUtils.fromJson(json);
                 try {
                     if (themesNeedToBeLoaded(workspace)) {
+                        HttpClient httpClient = new HttpClient();
+                        httpClient.allow(".*");
                         ThemeUtils.loadThemes(workspace);
                     }
                 } catch (Exception e) {
