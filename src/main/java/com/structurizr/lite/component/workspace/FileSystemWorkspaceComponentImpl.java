@@ -122,27 +122,34 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
         }
     }
 
-    private Workspace loadWorkspace(long workspaceId) {
+    private Workspace loadWorkspace(long workspaceId, boolean preferJson) {
         File workspaceDirectory = getDataDirectory(workspaceId);
         File dslFile = new File(workspaceDirectory, filename + ".dsl");
         File jsonFile = new File(workspaceDirectory, filename + ".json");
 
-        Workspace workspace = null;
-        if (dslFile.exists()) {
-            workspace = loadWorkspaceFromDsl(workspaceId, dslFile, jsonFile);
-        } else if (jsonFile.exists()) {
-            workspace = loadWorkspaceFromJson(workspaceId, jsonFile);
-
-            // if the JSON file exists and contains DSL, extract this and save it
-            String embeddedDsl = DslUtils.getDsl(workspace);
-            if (!StringUtils.isNullOrEmpty(embeddedDsl)) {
-                writeToFile(dslFile, embeddedDsl);
+        if (preferJson) {
+            if (jsonFile.exists()) {
+                return loadWorkspaceFromJson(workspaceId, jsonFile);
+            } else {
+                return loadWorkspace(workspaceId, false);
             }
         } else {
-            throw new NoWorkspaceFoundException(workspaceDirectory, filename);
-        }
+            if (dslFile.exists()) {
+                return loadWorkspaceFromDsl(workspaceId, dslFile, jsonFile);
+            } else if (jsonFile.exists()) {
+                Workspace workspace = loadWorkspaceFromJson(workspaceId, jsonFile);
 
-        return workspace;
+                // if the JSON file exists and contains DSL, extract this and save it
+                String embeddedDsl = DslUtils.getDsl(workspace);
+                if (!StringUtils.isNullOrEmpty(embeddedDsl)) {
+                    writeToFile(dslFile, embeddedDsl);
+                }
+
+                return workspace;
+            } else {
+                throw new NoWorkspaceFoundException(workspaceDirectory, filename);
+            }
+        }
     }
 
     private Workspace loadWorkspaceFromJson(long workspaceId, File jsonFile) {
@@ -216,7 +223,7 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
                 long id = parseWorkspaceId(file.getName());
                 if (file.isDirectory() && id > 0) {
                     try {
-                        Workspace workspace = loadWorkspace(id);
+                        Workspace workspace = loadWorkspace(id, true);
                         if (workspace == null) {
                             workspace = new Workspace("Workspace " + id, "");
                             workspace.setId(id);
@@ -232,8 +239,8 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
         return workspaces;
     }
 
-    public Workspace getWorkspace(long workspaceId) {
-        Workspace workspace = loadWorkspace(workspaceId);
+    public Workspace getWorkspace(long workspaceId, boolean preferJson) {
+        Workspace workspace = loadWorkspace(workspaceId, preferJson);
 
         if (workspace != null) {
             workspace.setId(workspaceId);

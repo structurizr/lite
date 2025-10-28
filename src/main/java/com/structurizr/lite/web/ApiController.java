@@ -34,7 +34,7 @@ public class ApiController extends AbstractController {
         try {
             authoriseRequest("GET", getPath(request, workspaceId), null, request, response);
 
-            Workspace workspace = workspaceComponent.getWorkspace(workspaceId);
+            Workspace workspace = workspaceComponent.getWorkspace(workspaceId, false);
             if (workspace != null) {
                 return WorkspaceUtils.toJson(workspace, false);
             } else {
