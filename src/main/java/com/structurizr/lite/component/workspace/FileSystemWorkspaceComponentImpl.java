@@ -176,6 +176,7 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
         try {
             StructurizrDslParser parser = new StructurizrDslParser();
             parser.getHttpClient().allow(".*");
+            parser.getHttpClient().setTimeout(1000 * 60); // 60 seconds
             parser.parse(dslFile);
             workspace = parser.getWorkspace();
             workspace.setId(workspaceId);
