@@ -104,7 +104,7 @@ public class HomeController extends AbstractController {
     public String showWorkspace(@PathVariable("workspaceId") long workspaceId,
                                 ModelMap model) {
         try {
-            Workspace workspace = workspaceComponent.getWorkspace(workspaceId);
+            Workspace workspace = workspaceComponent.getWorkspace(workspaceId, true);
             if (workspace == null) {
                 model.addAttribute("error", workspaceComponent.getError());
 

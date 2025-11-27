@@ -61,6 +61,7 @@ public class DiagramsController extends AbstractController {
         model.addAttribute("autoSaveInterval", Configuration.getInstance().getAutoSaveInterval());
         model.addAttribute("autoRefreshInterval", Configuration.getInstance().getAutoRefreshInterval());
         model.addAttribute("autoRefreshLastModifiedDate", workspaceComponent.getLastModifiedDate());
+        model.addAttribute("inspectionSummary", true);
 
         return "diagrams";
     }

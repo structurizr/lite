@@ -2,6 +2,7 @@
 
 .gradle/*
 build/*
+target/*
 .idea/*
 src/main/resources/build.properties
 src/main/resources/static/static/bootstrap-icons/*

@@ -15,7 +15,7 @@ public interface WorkspaceComponent {
 
     List<WorkspaceMetaData> getWorkspaces();
 
-    Workspace getWorkspace(long workspaceId);
+    Workspace getWorkspace(long workspaceId, boolean preferJson);
 
     void putWorkspace(Workspace workspace) throws WorkspaceComponentException;
 

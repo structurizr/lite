@@ -1,7 +1,9 @@
 package com.structurizr.lite.component.workspace;
 
 import com.structurizr.Workspace;
+import com.structurizr.dsl.DslUtils;
 import com.structurizr.dsl.StructurizrDslParser;
+import com.structurizr.inspection.DefaultInspector;
 import com.structurizr.lite.Configuration;
 import com.structurizr.lite.component.search.SearchComponent;
 import com.structurizr.lite.domain.WorkspaceMetaData;
@@ -120,21 +122,34 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
         }
     }
 
-    private Workspace loadWorkspace(long workspaceId) {
+    private Workspace loadWorkspace(long workspaceId, boolean preferJson) {
         File workspaceDirectory = getDataDirectory(workspaceId);
         File dslFile = new File(workspaceDirectory, filename + ".dsl");
         File jsonFile = new File(workspaceDirectory, filename + ".json");
 
-        Workspace workspace = null;
-        if (dslFile.exists()) {
-            workspace = loadWorkspaceFromDsl(workspaceId, dslFile, jsonFile);
-        } else if (jsonFile.exists()) {
-            workspace = loadWorkspaceFromJson(workspaceId, jsonFile);
+        if (preferJson) {
+            if (jsonFile.exists()) {
+                return loadWorkspaceFromJson(workspaceId, jsonFile);
+            } else {
+                return loadWorkspace(workspaceId, false);
+            }
         } else {
-            throw new NoWorkspaceFoundException(workspaceDirectory, filename);
-        }
+            if (dslFile.exists()) {
+                return loadWorkspaceFromDsl(workspaceId, dslFile, jsonFile);
+            } else if (jsonFile.exists()) {
+                Workspace workspace = loadWorkspaceFromJson(workspaceId, jsonFile);
 
-        return workspace;
+                // if the JSON file exists and contains DSL, extract this and save it
+                String embeddedDsl = DslUtils.getDsl(workspace);
+                if (!StringUtils.isNullOrEmpty(embeddedDsl)) {
+                    writeToFile(dslFile, embeddedDsl);
+                }
+
+                return workspace;
+            } else {
+                throw new NoWorkspaceFoundException(workspaceDirectory, filename);
+            }
+        }
     }
 
     private Workspace loadWorkspaceFromJson(long workspaceId, File jsonFile) {
@@ -160,6 +175,8 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
 
         try {
             StructurizrDslParser parser = new StructurizrDslParser();
+            parser.getHttpClient().allow(".*");
+            parser.getHttpClient().setTimeout(1000 * 60); // 60 seconds
             parser.parse(dslFile);
             workspace = parser.getWorkspace();
             workspace.setId(workspaceId);
@@ -167,6 +184,9 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
             // validate workspace scope
             WorkspaceScopeValidatorFactory.getValidator(workspace).validate(workspace);
 
+            // run default inspections
+            new DefaultInspector(workspace);
+            
             if (!workspace.getModel().isEmpty() && workspace.getViews().isEmpty()) {
                 workspace.getViews().createDefaultViews();
             }
@@ -204,7 +224,7 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
                 long id = parseWorkspaceId(file.getName());
                 if (file.isDirectory() && id > 0) {
                     try {
-                        Workspace workspace = loadWorkspace(id);
+                        Workspace workspace = loadWorkspace(id, true);
                         if (workspace == null) {
                             workspace = new Workspace("Workspace " + id, "");
                             workspace.setId(id);
@@ -220,8 +240,8 @@ class FileSystemWorkspaceComponentImpl implements WorkspaceComponent {
         return workspaces;
     }
 
-    public Workspace getWorkspace(long workspaceId) {
-        Workspace workspace = loadWorkspace(workspaceId);
+    public Workspace getWorkspace(long workspaceId, boolean preferJson) {
+        Workspace workspace = loadWorkspace(workspaceId, preferJson);
 
         if (workspace != null) {
             workspace.setId(workspaceId);

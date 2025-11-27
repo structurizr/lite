@@ -32,7 +32,7 @@ public class InspectionsController extends AbstractController {
         workspaceMetaData.setApiKey(Configuration.getInstance().getApiKey());
         workspaceMetaData.setApiSecret(Configuration.getInstance().getApiSecret());
 
-        Workspace workspace = workspaceComponent.getWorkspace(1);
+        Workspace workspace = workspaceComponent.getWorkspace(1, false);
         if (workspace == null) {
             model.addAttribute("error", workspaceComponent.getError());
         } else {

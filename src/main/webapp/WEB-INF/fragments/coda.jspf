@@ -3,17 +3,12 @@
     <c:if test="${showFooter eq true}">
     <div id="footer">
         <p>
-            Structurizr Lite
-            |
-            <span id="buildNumber">Build ${version.buildNumber}</span> <!-- <fmt:formatDate value="${version.buildTimestamp}" pattern="EEE dd MMM yyyy HH:mm z" /> -->
-            |
-            <a href="https://docs.structurizr.com/lite" target="_blank">Help</a>
+            <a href="https://docs.structurizr.com/lite" target="_blank">Structurizr Lite - <span id="buildNumber">${version.buildNumber}</span></a>
         </p>
         <p>
-            <img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/moon.svg" class="icon-sm" />
-            <a id="renderingModeLightLink" href="">Light</a> |
-            <a id="renderingModeDarkLink" href="">Dark</a> |
-            <a id="renderingModeSystemLink" href="">System</a>
+            <a id="renderingModeLightLink" href="" title="Light"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/sun.svg" class="icon-sm" /></a> |
+            <a id="renderingModeDarkLink" href="" title="Dark"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/moon-fill.svg" class="icon-sm" /></a> |
+            <a id="renderingModeSystemLink" href="" title="System"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/sliders.svg" class="icon-sm" /></a>
         </p>
     </div>
     </c:if>

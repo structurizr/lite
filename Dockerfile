@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21.0.6_7-jre-noble AS structurizr-lite
+FROM eclipse-temurin:21.0.8_9-jre-noble AS structurizr-lite
 ENV PORT=8080
 
 RUN set -eux; \

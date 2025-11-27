@@ -35,7 +35,7 @@ public abstract class AbstractController {
         String nonce = Base64.getEncoder().encodeToString(new RandomGuidGenerator().generate().getBytes(StandardCharsets.UTF_8));
         model.addAttribute(SCRIPT_NONCE_ATTRIBUTE, nonce);
 
-        response.addHeader(CONTENT_SECURITY_POLICY_HEADER, String.format("script-src 'self' 'nonce-%s'", nonce));
+        response.addHeader(CONTENT_SECURITY_POLICY_HEADER, String.format("script-src 'self' 'nonce-%s'; worker-src blob:", nonce));
     }
 
     @ModelAttribute
