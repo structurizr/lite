@@ -38,10 +38,6 @@ public abstract class AbstractController {
         response.addHeader(CONTENT_SECURITY_POLICY_HEADER, String.format("script-src 'self' 'nonce-%s'; worker-src blob:", nonce));
     }
 
-    @ModelAttribute
-    protected void addXFrameOptionsHeader(HttpServletRequest request, HttpServletResponse response) {
-        response.addHeader("X-Frame-Options", "deny");
-    }
 
     protected void addCommonAttributes(ModelMap model, String pageTitle, boolean showHeaderAndFooter) {
         model.addAttribute("timeZone", TimeZone.getDefault().getID());

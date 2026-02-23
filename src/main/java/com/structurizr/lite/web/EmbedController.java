@@ -9,16 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class EmbedController extends AbstractController {
 
-    @Override
-    protected void addXFrameOptionsHeader(HttpServletRequest request, HttpServletResponse response) {
-        // do nothing ... this page is supposed to be iframe'd
-    }
 
     @RequestMapping(value = "/embed", method = RequestMethod.GET)
     public String embedFromParent(@RequestParam(required = false, defaultValue = "0") long workspace,
